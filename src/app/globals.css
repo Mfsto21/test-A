@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background-color: #f7f2e9;
+}
+
+::selection {
+  background: #a9793f;
+  color: #f7f2e9;
+}
+
+/* Signature "trade complete" celebration shimmer — gold sweep across the
+   filled bar the instant a trade crosses 100%. Kept as a raw keyframe here
+   (rather than only Tailwind's animate-shimmer utility) so the gradient
+   itself — not just the animation timing — is easy to tune in one place. */
+.progress-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill.is-complete::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.75) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.4s ease-in-out infinite;
+}
+
+.bg-grain {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.hairline {
+  border-color: rgba(21, 19, 15, 0.12);
+}

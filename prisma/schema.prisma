@@ -1,0 +1,208 @@
+// Future Home Platform — data model
+// Deliberately "home-centric" (see product brief §91): every domain object
+// hangs off a Home, and a Home hangs off a Builder. Nothing is hard-coded to
+// a single project — Kendall Hill is seed data, not schema.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // SQLite for a zero-config, fully local "real database" during development
+  // and the pilot. Swap provider to "postgresql" + DATABASE_URL for a hosted
+  // Postgres (Supabase/Neon/Vercel Postgres) in production — every model
+  // below is provider-agnostic.
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// SQLite has no native enum type, so Role is a plain String constrained to
+// "BUILDER" | "OWNER" in the TypeScript layer (see src/lib/session.ts).
+
+model Builder {
+  id        String   @id @default(cuid())
+  name      String
+  license   String?
+  website   String?
+  createdAt DateTime @default(now())
+  homes     Home[]
+  users     User[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String // "BUILDER" | "OWNER"
+  builderId    String?
+  builder      Builder? @relation(fields: [builderId], references: [id])
+  homeId       String? // for OWNER accounts: the single home they can see
+  home         Home?    @relation(fields: [homeId], references: [id])
+  createdAt    DateTime @default(now())
+  messages     Message[]
+  storyUpdates StoryUpdate[]
+}
+
+model Home {
+  id                    String    @id @default(cuid())
+  slug                  String    @unique
+  name                  String // "Kendall Hill"
+  address               String
+  ownerLabel            String // e.g. "The Kendall Hill Owners" — display-safe, no PII required
+  heroImageUrl          String?
+  overallProgress       Int       @default(0)
+  currentPhase          String?
+  targetCompletionDate  DateTime?
+  builderId             String
+  builder               Builder   @relation(fields: [builderId], references: [id])
+  createdAt             DateTime  @default(now())
+
+  users        User[]
+  trades       Trade[]
+  phases       Phase[]
+  storyUpdates StoryUpdate[]
+  media        Media[]
+  plans        PlanDocument[]
+  decisions    Decision[]
+  documents    Document[]
+  messages     Message[]
+  capsules     TimeCapsuleEntry[]
+}
+
+model Trade {
+  id            String    @id @default(cuid())
+  homeId        String
+  home          Home      @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  name          String
+  order         Int       @default(0)
+  progress      Int       @default(0)
+  summary       String? // homeowner-facing plain-language explanation
+  milestoneNote String? // e.g. "Roller shutter contractor arriving 8/27"
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  subcategories TradeSubcategory[]
+}
+
+model TradeSubcategory {
+  id       String @id @default(cuid())
+  tradeId  String
+  trade    Trade  @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+  name     String
+  order    Int    @default(0)
+  progress Int    @default(0)
+}
+
+model Phase {
+  id           String    @id @default(cuid())
+  homeId       String
+  home         Home      @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  name         String
+  order        Int       @default(0)
+  status       String    @default("upcoming") // upcoming | current | complete
+  expectedDate DateTime?
+  actualDate   DateTime?
+  description  String?
+}
+
+model StoryUpdate {
+  id          String   @id @default(cuid())
+  homeId      String
+  home        Home     @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  title       String
+  weekLabel   String // "Week of August 17, 2026"
+  narrative   String // long-form personal narrative text
+  whatWeSee   String? // "What We See" builder-perspective note
+  publishedAt DateTime @default(now())
+  authorId    String?
+  author      User?    @relation(fields: [authorId], references: [id])
+  media       Media[]
+}
+
+model Media {
+  id            String       @id @default(cuid())
+  homeId        String
+  home          Home         @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  storyUpdateId String?
+  storyUpdate   StoryUpdate? @relation(fields: [storyUpdateId], references: [id])
+  type          String // photo | video | drone
+  url           String?
+  room          String?
+  phase         String?
+  tradeName     String?
+  caption       String?
+  takenAt       DateTime     @default(now())
+  order         Int          @default(0)
+}
+
+model PlanDocument {
+  id       String @id @default(cuid())
+  homeId   String
+  home     Home   @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  name     String // "Site Plan", "First Floor", etc
+  fileUrl  String?
+  order    Int    @default(0)
+}
+
+model Decision {
+  id          String           @id @default(cuid())
+  homeId      String
+  home        Home             @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  title       String
+  category    String // "Landscape", "Kitchen", "Pool", "Cabinetry" ...
+  description String?
+  status           String           @default("pending") // pending | approved | declined
+  important        Boolean          @default(false)
+  order            Int              @default(0)
+  selectedOptionId String?
+  createdAt        DateTime         @default(now())
+  options          DecisionOption[]
+}
+
+model DecisionOption {
+  id           String   @id @default(cuid())
+  decisionId   String
+  decision     Decision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+  vendorName   String
+  amount       Float?
+  scope        String?
+  inclusions   String?
+  exclusions   String?
+  notes        String?
+  recommended  Boolean  @default(false)
+  fileUrl      String?
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  homeId    String
+  home      Home     @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  name      String
+  category  String // Plans | Selections | Equipment | Warranty | Vendor | Maintenance
+  fileUrl   String?
+  notes     String?
+  createdAt DateTime @default(now())
+}
+
+model TimeCapsuleEntry {
+  id          String   @id @default(cuid())
+  homeId      String
+  home        Home     @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  room        String
+  system      String // Electrical | Plumbing | HVAC | Framing | Structural
+  description String
+  mediaUrl    String?
+  createdAt   DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  homeId    String
+  home      Home     @relation(fields: [homeId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  body      String
+  parentId  String?
+  createdAt DateTime @default(now())
+}
