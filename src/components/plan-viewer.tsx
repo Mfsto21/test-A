@@ -12,6 +12,18 @@ export function PlanViewer({
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const dragging = useRef<{ x: number; y: number } | null>(null);
+  const isPdf = fileUrl?.toLowerCase().endsWith(".pdf") ?? false;
+
+  // PDFs get the browser's own viewer — it already has better zoom, search,
+  // and multi-page support than our drag canvas can offer, and the two
+  // don't compose (an <img> pan/zoom wrapper around a PDF doesn't render).
+  if (isPdf && fileUrl) {
+    return (
+      <div className="overflow-hidden rounded-2xl border hairline">
+        <iframe src={fileUrl} title={name} className="h-[620px] w-full" />
+      </div>
+    );
+  }
 
   function onPointerDown(e: React.PointerEvent) {
     dragging.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };

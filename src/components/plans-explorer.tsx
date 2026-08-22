@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PlanViewer } from "@/components/plan-viewer";
 import { Card, Eyebrow, Pill } from "@/components/ui";
+import { UploadField } from "@/components/upload-field";
 import { setPlanFileUrl } from "@/lib/actions/plans";
 
 type Plan = { id: string; name: string; fileUrl: string | null };
@@ -39,12 +40,12 @@ export function PlansExplorer({ plans, canEdit }: { plans: Plan[]; canEdit: bool
       </div>
 
       {canEdit && updatePlan && (
-        <form action={updatePlan} className="mt-4 flex items-center gap-3">
-          <input
+        <form action={updatePlan} className="mt-4 flex flex-wrap items-center gap-3">
+          <UploadField
             name="fileUrl"
             defaultValue={active.fileUrl ?? ""}
-            placeholder="Drawing file URL for this plan"
-            className="flex-1 rounded-md border hairline bg-paper px-3 py-2 text-sm outline-none focus:border-bronze-400"
+            accept="image/*,.pdf"
+            placeholder="Paste a URL, or upload this plan's drawing (image or PDF)"
           />
           <button
             type="submit"

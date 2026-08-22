@@ -7,7 +7,11 @@ export default async function DesignStudioPage() {
   const { session, home } = await requireSessionAndHome();
 
   const decisions = await prisma.decision.findMany({
-    where: { homeId: home.id },
+    // Pool is excluded here on purpose: while it's in permitting there's
+    // nothing for the owner to decide, so it doesn't belong in the Design
+    // Packet's approval queue. It still gets its own prominent callout on
+    // the Residence dashboard.
+    where: { homeId: home.id, category: { not: "Pool" } },
     orderBy: [{ important: "desc" }, { order: "asc" }],
     include: { options: true },
   });

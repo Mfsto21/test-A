@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { addStoryMedia } from "@/lib/actions/story";
 import { Card, Eyebrow, PageShell, Pill } from "@/components/ui";
 import { MediaTile } from "@/components/media-tile";
+import { UploadField } from "@/components/upload-field";
 import { formatDate } from "@/lib/format";
 
 export default async function StoryDetailPage({
@@ -89,10 +90,10 @@ export default async function StoryDetailPage({
               placeholder="Room / area (optional)"
               className="rounded-lg border hairline bg-paper px-3 py-2 text-sm outline-none focus:border-bronze-400"
             />
-            <input
+            <UploadField
               name="url"
-              placeholder="File URL (optional — leave blank to placeholder)"
-              className="col-span-full rounded-lg border hairline bg-paper px-3 py-2 text-sm outline-none focus:border-bronze-400"
+              accept="image/*,video/*"
+              placeholder="Paste a URL, or upload a photo/video (leave blank to placeholder)"
             />
             <input
               name="caption"

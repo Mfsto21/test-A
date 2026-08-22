@@ -10,7 +10,13 @@ export default async function AppLayout({
 
   return (
     <div className="min-h-screen">
-      <Nav homeName={home.name} role={session.role} userName={session.name} />
+      <Nav
+        homeName={home.name}
+        role={session.role}
+        userName={session.name}
+        logoUrlLight={home.builder.logoUrlLight}
+        logoUrlDark={home.builder.logoUrlDark}
+      />
       <main>{children}</main>
     </div>
   );

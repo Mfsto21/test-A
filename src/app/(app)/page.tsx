@@ -6,9 +6,12 @@ import { HouseIllustration } from "@/components/house-illustration";
 import { Ticker } from "@/components/ticker";
 import { ProgressBar, CompleteBadge } from "@/components/progress-bar";
 import { Card, Eyebrow, Pill, PageShell, SectionIntro } from "@/components/ui";
+import { UploadField } from "@/components/upload-field";
+import { updateHomePhotos, updateBuilderLogo } from "@/lib/actions/branding";
 
 export default async function ResidencePage() {
-  const { home } = await requireSessionAndHome();
+  const { session, home } = await requireSessionAndHome();
+  const canEdit = session.role === "BUILDER";
 
   const [trades, latestStory, poolDecision] = await Promise.all([
     prisma.trade.findMany({ where: { homeId: home.id }, orderBy: { order: "asc" } }),
@@ -32,13 +35,25 @@ export default async function ResidencePage() {
     <div>
       {/* HERO — RESIDENCE */}
       <section className="relative flex min-h-[92vh] items-end overflow-hidden bg-ink-900 text-paper">
-        <div className="bg-grain pointer-events-none absolute inset-0" />
-        <HouseIllustration className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] w-full text-paper" />
+        {home.heroImageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={home.heroImageUrl}
+            alt={home.name}
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          />
+        ) : (
+          <>
+            <div className="bg-grain pointer-events-none absolute inset-0" />
+            <HouseIllustration className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] w-full text-paper" />
+          </>
+        )}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
-            background:
-              "linear-gradient(180deg, rgba(21,19,15,0.15) 0%, rgba(21,19,15,0.55) 55%, rgba(21,19,15,0.96) 100%)",
+            background: home.heroImageUrl
+              ? "linear-gradient(180deg, rgba(21,19,15,0.25) 0%, rgba(21,19,15,0.35) 45%, rgba(21,19,15,0.92) 100%)"
+              : "linear-gradient(180deg, rgba(21,19,15,0.15) 0%, rgba(21,19,15,0.55) 55%, rgba(21,19,15,0.96) 100%)",
           }}
         />
         <div
@@ -103,7 +118,60 @@ export default async function ResidencePage() {
         items={trades.map((t) => t.name.toUpperCase())}
       />
 
-      <PageShell>
+      <PageShell noTopClearance>
+        {canEdit && (
+          <Card className="mb-16 p-6">
+            <Eyebrow>MJF Team — Branding &amp; Photos</Eyebrow>
+            <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <form action={updateBuilderLogo.bind(null, home.builderId)} className="space-y-3">
+                <p className="text-[12px] font-medium text-ink-800">Logo</p>
+                <UploadField
+                  name="logoUrlLight"
+                  label="For light backgrounds (dark-colored logo)"
+                  defaultValue={home.builder.logoUrlLight ?? ""}
+                  accept="image/png,image/svg+xml,image/webp"
+                />
+                <UploadField
+                  name="logoUrlDark"
+                  label="For dark backgrounds, e.g. the hero (light-colored logo)"
+                  defaultValue={home.builder.logoUrlDark ?? ""}
+                  accept="image/png,image/svg+xml,image/webp"
+                />
+                <button
+                  type="submit"
+                  className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
+                >
+                  Save Logo
+                </button>
+                <p className="text-[11px] leading-relaxed text-ink-700/50">
+                  Leave either blank to fall back to the vector mark, which
+                  adapts to any background on its own.
+                </p>
+              </form>
+
+              <form action={updateHomePhotos.bind(null, home.id)} className="space-y-3">
+                <p className="text-[12px] font-medium text-ink-800">Photos</p>
+                <UploadField
+                  name="heroImageUrl"
+                  label="Hero rendering (Residence page background)"
+                  defaultValue={home.heroImageUrl ?? ""}
+                />
+                <UploadField
+                  name="progressImageUrl"
+                  label="Current progress photo (This Week panel)"
+                  defaultValue={home.progressImageUrl ?? ""}
+                />
+                <button
+                  type="submit"
+                  className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
+                >
+                  Save Photos
+                </button>
+              </form>
+            </div>
+          </Card>
+        )}
+
         {/* THE HOME STORY teaser */}
         {latestStory && (
           <section className="mb-20">
@@ -126,7 +194,19 @@ export default async function ResidencePage() {
 
             <Card className="mt-8 grid grid-cols-1 overflow-hidden md:grid-cols-5">
               <div className="relative col-span-2 flex min-h-[240px] items-end bg-ink-900 p-8 text-paper">
-                <HouseIllustration className="pointer-events-none absolute inset-0 h-full w-full text-paper/40" />
+                {home.progressImageUrl ? (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={home.progressImageUrl}
+                      alt="Current progress"
+                      className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/20 to-transparent" />
+                  </>
+                ) : (
+                  <HouseIllustration className="pointer-events-none absolute inset-0 h-full w-full text-paper/40" />
+                )}
                 <div className="relative">
                   <Pill tone="bronze">{latestStory.weekLabel}</Pill>
                   <h3 className="mt-3 font-serif text-2xl leading-snug">

@@ -51,8 +51,23 @@ export async function addDecisionOption(decisionId: string, formData: FormData) 
       inclusions: String(formData.get("inclusions") ?? "").trim() || null,
       exclusions: String(formData.get("exclusions") ?? "").trim() || null,
       notes: String(formData.get("notes") ?? "").trim() || null,
+      fileUrl: String(formData.get("fileUrl") ?? "").trim() || null,
       recommended: formData.get("recommended") === "on",
     },
+  });
+
+  revalidatePath("/design-studio");
+}
+
+export async function setDecisionFile(decisionId: string, formData: FormData) {
+  const session = await requireSession();
+  if (session.role !== "BUILDER") throw new Error("Only the MJF team can do that.");
+
+  const fileUrl = String(formData.get("fileUrl") ?? "").trim();
+
+  await prisma.decision.update({
+    where: { id: decisionId },
+    data: { fileUrl: fileUrl || null },
   });
 
   revalidatePath("/design-studio");

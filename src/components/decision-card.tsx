@@ -2,10 +2,12 @@
 
 import { useState, useTransition } from "react";
 import { Card, Eyebrow, Pill } from "@/components/ui";
+import { UploadField } from "@/components/upload-field";
 import {
   chooseDecisionOption,
   setDecisionStatus,
   addDecisionOption,
+  setDecisionFile,
 } from "@/lib/actions/decisions";
 
 type Option = {
@@ -17,6 +19,7 @@ type Option = {
   exclusions: string | null;
   notes: string | null;
   recommended: boolean;
+  fileUrl: string | null;
 };
 
 type DecisionLike = {
@@ -24,6 +27,7 @@ type DecisionLike = {
   title: string;
   category: string;
   description: string | null;
+  fileUrl: string | null;
   status: string;
   important: boolean;
   selectedOptionId: string | null;
@@ -35,7 +39,9 @@ const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "
 export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; canEdit: boolean }) {
   const [pending, startTransition] = useTransition();
   const [addingOption, setAddingOption] = useState(false);
+  const [attachingFile, setAttachingFile] = useState(false);
   const addOption = addDecisionOption.bind(null, decision.id);
+  const attachFile = setDecisionFile.bind(null, decision.id);
 
   const statusTone = decision.status === "approved" ? "moss" : decision.status === "declined" ? "neutral" : "bronze";
 
@@ -101,6 +107,17 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
                   {opt.notes && <p className="italic text-ink-700/60">{opt.notes}</p>}
                 </div>
 
+                {opt.fileUrl && (
+                  <a
+                    href={opt.fileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-3 inline-block text-[12px] uppercase tracking-wide text-bronze-600 hover:text-bronze-700"
+                  >
+                    View Proposal Document →
+                  </a>
+                )}
+
                 {!chosen && (
                   <button
                     disabled={pending}
@@ -118,23 +135,71 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
         </div>
       )}
 
-      {decision.options.length === 0 && decision.status === "pending" && (
-        <div className="mt-6 flex gap-3">
-          <button
-            disabled={pending}
-            onClick={() => startTransition(() => setDecisionStatus(decision.id, "approved"))}
-            className="rounded-lg bg-ink-900 px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
-          >
-            Approve
-          </button>
-          <button
-            disabled={pending}
-            onClick={() => startTransition(() => setDecisionStatus(decision.id, "declined"))}
-            className="rounded-lg border hairline px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-ink-700 transition hover:border-ink-900 hover:text-ink-900"
-          >
-            Decline
-          </button>
-        </div>
+      {decision.options.length === 0 && (
+        <>
+          {decision.fileUrl ? (
+            <a
+              href={decision.fileUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex items-center gap-1.5 rounded-lg border hairline px-4 py-2 text-[12px] uppercase tracking-wide text-ink-800 transition hover:border-ink-900"
+            >
+              View Document →
+            </a>
+          ) : (
+            !canEdit && (
+              <p className="mt-5 text-[12px] italic text-ink-700/50">
+                No document attached yet.
+              </p>
+            )
+          )}
+
+          {decision.status === "pending" && (
+            <div className="mt-4 flex gap-3">
+              <button
+                disabled={pending}
+                onClick={() => startTransition(() => setDecisionStatus(decision.id, "approved"))}
+                className="rounded-lg bg-ink-900 px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
+              >
+                Approve
+              </button>
+              <button
+                disabled={pending}
+                onClick={() => startTransition(() => setDecisionStatus(decision.id, "declined"))}
+                className="rounded-lg border hairline px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-ink-700 transition hover:border-ink-900 hover:text-ink-900"
+              >
+                Decline
+              </button>
+            </div>
+          )}
+
+          {canEdit && (
+            <div className="mt-4">
+              <button
+                onClick={() => setAttachingFile((v) => !v)}
+                className="text-[11px] uppercase tracking-wide text-bronze-600 hover:text-bronze-700"
+              >
+                {attachingFile ? "Close" : decision.fileUrl ? "Replace Document" : "+ Attach Document"}
+              </button>
+              {attachingFile && (
+                <form action={attachFile} className="mt-3 flex flex-wrap items-center gap-2">
+                  <UploadField
+                    name="fileUrl"
+                    defaultValue={decision.fileUrl ?? ""}
+                    accept="image/*,.pdf"
+                    placeholder="Paste a URL, or upload a drawing / PDF"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
+                  >
+                    Save
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
+        </>
       )}
 
       {canEdit && (
@@ -153,6 +218,11 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
               <input name="inclusions" placeholder="Inclusions" className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
               <input name="exclusions" placeholder="Exclusions" className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
               <input name="notes" placeholder="Notes" className="col-span-full rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
+              <UploadField
+                name="fileUrl"
+                accept="image/*,.pdf"
+                placeholder="Paste a URL, or upload the proposal PDF"
+              />
               <label className="flex items-center gap-2 text-[12px] text-ink-700">
                 <input type="checkbox" name="recommended" /> MJF recommends this option
               </label>

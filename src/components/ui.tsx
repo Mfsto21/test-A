@@ -83,6 +83,25 @@ export function Pill({
   );
 }
 
-export function PageShell({ children }: { children: ReactNode }) {
-  return <div className="mx-auto max-w-6xl px-6 py-12 sm:py-16">{children}</div>;
+export function PageShell({
+  children,
+  noTopClearance = false,
+}: {
+  children: ReactNode;
+  /** Skip the nav-clearance padding — for use right after a hero that
+   * already provides its own space below the (transparent) fixed nav. */
+  noTopClearance?: boolean;
+}) {
+  // Nav is fixed/floating (so it can overlay the Residence hero
+  // transparently), which means every other page has to compensate with its
+  // own top clearance — the nav no longer reserves space in normal flow.
+  return (
+    <div
+      className={`mx-auto max-w-6xl px-6 pb-12 sm:pb-16 ${
+        noTopClearance ? "pt-12 sm:pt-16" : "pt-28 sm:pt-32"
+      }`}
+    >
+      {children}
+    </div>
+  );
 }

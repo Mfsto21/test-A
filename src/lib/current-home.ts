@@ -15,7 +15,7 @@ import { redirect } from "next/navigation";
  */
 export const requireSessionAndHome = cache(async function requireSessionAndHome(): Promise<{
   session: SessionPayload;
-  home: NonNullable<Awaited<ReturnType<typeof prisma.home.findFirst>>>;
+  home: NonNullable<Awaited<ReturnType<typeof prisma.home.findFirst<{ include: { builder: true } }>>>>;
 }> {
   const session = await getSession();
   if (!session) redirect("/login");
@@ -23,10 +23,10 @@ export const requireSessionAndHome = cache(async function requireSessionAndHome(
   let home;
   if (session.role === "OWNER") {
     home = session.homeId
-      ? await prisma.home.findUnique({ where: { id: session.homeId } })
+      ? await prisma.home.findUnique({ where: { id: session.homeId }, include: { builder: true } })
       : null;
   } else {
-    home = await prisma.home.findFirst({ orderBy: { createdAt: "asc" } });
+    home = await prisma.home.findFirst({ orderBy: { createdAt: "asc" }, include: { builder: true } });
   }
 
   if (!home) redirect("/login");
