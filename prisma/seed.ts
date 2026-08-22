@@ -11,6 +11,9 @@ async function main() {
       name: "MJF Construction & Development",
       license: "Lic #1069037",
       website: "https://www.mjfconstruction.net",
+      // Real MJF brand assets, supplied by the founder — see public/brand/.
+      logoIconUrl: "/brand/logo-icon.png",
+      logoWordmarkUrl: "/brand/logo-wordmark.png",
     },
   });
 
@@ -23,6 +26,8 @@ async function main() {
       overallProgress: 35,
       currentPhase: "MEP Rough-In",
       builderId: builder.id,
+      heroImageUrl: "/brand/hero-photo.jpg",
+      progressImageUrl: "/brand/progress-photo.jpg",
     },
   });
 

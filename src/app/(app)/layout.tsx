@@ -14,8 +14,8 @@ export default async function AppLayout({
         homeName={home.name}
         role={session.role}
         userName={session.name}
-        logoUrlLight={home.builder.logoUrlLight}
-        logoUrlDark={home.builder.logoUrlDark}
+        logoIconUrl={home.builder.logoIconUrl}
+        logoWordmarkUrl={home.builder.logoWordmarkUrl}
       />
       <main>{children}</main>
     </div>

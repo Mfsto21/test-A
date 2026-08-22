@@ -126,15 +126,15 @@ export default async function ResidencePage() {
               <form action={updateBuilderLogo.bind(null, home.builderId)} className="space-y-3">
                 <p className="text-[12px] font-medium text-ink-800">Logo</p>
                 <UploadField
-                  name="logoUrlLight"
-                  label="For light backgrounds (dark-colored logo)"
-                  defaultValue={home.builder.logoUrlLight ?? ""}
+                  name="logoIconUrl"
+                  label="Icon mark (the roofline MJF monogram)"
+                  defaultValue={home.builder.logoIconUrl ?? ""}
                   accept="image/png,image/svg+xml,image/webp"
                 />
                 <UploadField
-                  name="logoUrlDark"
-                  label="For dark backgrounds, e.g. the hero (light-colored logo)"
-                  defaultValue={home.builder.logoUrlDark ?? ""}
+                  name="logoWordmarkUrl"
+                  label="Wordmark (the MJF Construction & Development lockup)"
+                  defaultValue={home.builder.logoWordmarkUrl ?? ""}
                   accept="image/png,image/svg+xml,image/webp"
                 />
                 <button
@@ -144,8 +144,9 @@ export default async function ResidencePage() {
                   Save Logo
                 </button>
                 <p className="text-[11px] leading-relaxed text-ink-700/50">
-                  Leave either blank to fall back to the vector mark, which
-                  adapts to any background on its own.
+                  Both should be black-on-transparent — they're auto-inverted
+                  to white for use over the dark hero. Leave either blank to
+                  fall back to the vector mark.
                 </p>
               </form>
 

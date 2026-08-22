@@ -24,13 +24,14 @@ model Builder {
   name      String
   license   String?
   website   String?
-  // Two variants because the mark needs to work over both the dark hero
-  // (transparent header) and the solid cream header — a single raster export
-  // usually only reads on one. Either can be left unset, in which case the
-  // UI falls back to a currentColor-driven vector mark that adapts on its
-  // own. See src/components/logo-mark.tsx.
-  logoUrlLight String? // for use on light/cream backgrounds (a dark logo)
-  logoUrlDark  String? // for use on dark backgrounds, e.g. the hero (a light logo)
+  // The real MJF mark is two separate assets combined into one lockup (an
+  // icon mark + a wordmark), matching how mjfconstruction.net presents it —
+  // see src/components/logo-mark.tsx for how they're composed and adapted
+  // for the dark hero (a CSS invert, since both are black-on-transparent).
+  // Either can be left unset, in which case the UI falls back to a
+  // currentColor-driven vector mark that adapts to any background on its own.
+  logoIconUrl     String? // the house/roofline "MJF" icon mark
+  logoWordmarkUrl String? // the "MJF CONSTRUCTION & DEVELOPMENT" text lockup
   createdAt DateTime @default(now())
   homes     Home[]
   users     User[]

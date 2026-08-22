@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logout } from "@/lib/actions/auth";
-import { LogoMark } from "@/components/logo-mark";
+import { BuilderWordmark } from "@/components/logo-mark";
 
 const LINKS = [
   { href: "/", label: "Residence" },
@@ -28,14 +28,14 @@ export function Nav({
   homeName,
   role,
   userName,
-  logoUrlLight,
-  logoUrlDark,
+  logoIconUrl,
+  logoWordmarkUrl,
 }: {
   homeName: string;
   role: "BUILDER" | "OWNER";
   userName: string;
-  logoUrlLight?: string | null;
-  logoUrlDark?: string | null;
+  logoIconUrl?: string | null;
+  logoWordmarkUrl?: string | null;
 }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -56,7 +56,6 @@ export function Nav({
   }, [pathname]);
 
   const transparent = pathname === HERO_PAGE && !scrolled;
-  const logoSrc = transparent ? logoUrlDark : logoUrlLight;
 
   return (
     <header
@@ -66,33 +65,16 @@ export function Nav({
           : "hairline bg-paper/90 backdrop-blur-md"
       }`}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
-        <Link href="/" className="flex items-center gap-2.5">
-          {logoSrc ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={logoSrc} alt="MJF Construction & Development" className="h-7 w-auto" />
-          ) : (
-            <LogoMark className={`h-6 w-6 transition-colors duration-300 ${transparent ? "text-paper" : "text-ink-900"}`} />
-          )}
-          <div className="leading-none">
-            <div
-              className={`text-[11px] font-semibold uppercase tracking-widest2 transition-colors duration-300 ${
-                transparent ? "text-paper" : "text-ink-900"
-              }`}
-            >
-              MJF
-            </div>
-            <div
-              className={`text-[9px] uppercase tracking-[0.18em] transition-colors duration-300 ${
-                transparent ? "text-paper/60" : "text-ink-700/60"
-              }`}
-            >
-              {homeName}
-            </div>
-          </div>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-8 px-6 py-3.5">
+        <Link href="/" className="flex shrink-0 items-center gap-3" title={homeName}>
+          <BuilderWordmark
+            tone={transparent ? "light" : "dark"}
+            logoIconUrl={logoIconUrl}
+            logoWordmarkUrl={logoWordmarkUrl}
+          />
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden shrink items-center gap-5 xl:gap-6 lg:flex">
           {LINKS.map((link) => {
             const active =
               link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -119,7 +101,7 @@ export function Nav({
           })}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-3">
           <div className="hidden text-right sm:block">
             <div
               className={`text-[11px] font-medium transition-colors duration-300 ${

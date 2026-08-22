@@ -33,14 +33,14 @@ export async function updateHomePhotos(homeId: string, formData: FormData) {
 export async function updateBuilderLogo(builderId: string, formData: FormData) {
   await requireBuilder();
 
-  const logoUrlLight = String(formData.get("logoUrlLight") ?? "").trim();
-  const logoUrlDark = String(formData.get("logoUrlDark") ?? "").trim();
+  const logoIconUrl = String(formData.get("logoIconUrl") ?? "").trim();
+  const logoWordmarkUrl = String(formData.get("logoWordmarkUrl") ?? "").trim();
 
   await prisma.builder.update({
     where: { id: builderId },
     data: {
-      logoUrlLight: logoUrlLight || null,
-      logoUrlDark: logoUrlDark || null,
+      logoIconUrl: logoIconUrl || null,
+      logoWordmarkUrl: logoWordmarkUrl || null,
     },
   });
 

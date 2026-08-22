@@ -3,7 +3,7 @@ import { BuilderWordmark } from "@/components/logo-mark";
 import { LoginForm } from "@/components/login-form";
 
 export default async function LoginPage() {
-  const { heroImageUrl, logoUrlDark } = await getLoginBranding();
+  const { heroImageUrl, logoIconUrl, logoWordmarkUrl } = await getLoginBranding();
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink-900 px-6">
@@ -35,7 +35,12 @@ export default async function LoginPage() {
 
       <div className="relative w-full max-w-sm">
         <div className="mb-10 flex flex-col items-center">
-          <BuilderWordmark tone="light" logoUrlDark={logoUrlDark} />
+          <BuilderWordmark
+            tone="light"
+            layout="stacked"
+            logoIconUrl={logoIconUrl}
+            logoWordmarkUrl={logoWordmarkUrl}
+          />
         </div>
 
         <div className="rounded-2xl border border-paper/10 bg-paper/[0.04] p-8 shadow-soft backdrop-blur-sm">

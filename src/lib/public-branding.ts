@@ -14,6 +14,7 @@ export async function getLoginBranding() {
 
   return {
     heroImageUrl: home?.heroImageUrl ?? null,
-    logoUrlDark: home?.builder.logoUrlDark ?? null,
+    logoIconUrl: home?.builder.logoIconUrl ?? null,
+    logoWordmarkUrl: home?.builder.logoWordmarkUrl ?? null,
   };
 }
