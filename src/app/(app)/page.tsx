@@ -137,6 +137,11 @@ export default async function ResidencePage() {
                   defaultValue={home.builder.logoWordmarkUrl ?? ""}
                   accept="image/png,image/svg+xml,image/webp"
                 />
+                <UploadField
+                  name="loginHeroImageUrl"
+                  label="Login screen background photo (generic — not this project)"
+                  defaultValue={home.builder.loginHeroImageUrl ?? ""}
+                />
                 <button
                   type="submit"
                   className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
@@ -144,9 +149,9 @@ export default async function ResidencePage() {
                   Save Logo
                 </button>
                 <p className="text-[11px] leading-relaxed text-ink-700/50">
-                  Both should be black-on-transparent — they're auto-inverted
-                  to white for use over the dark hero. Leave either blank to
-                  fall back to the vector mark.
+                  Logo files should be black-on-transparent — they're
+                  auto-inverted to white for use over the dark hero. Leave
+                  any of these blank to fall back to the defaults.
                 </p>
               </form>
 
@@ -154,7 +159,7 @@ export default async function ResidencePage() {
                 <p className="text-[12px] font-medium text-ink-800">Photos</p>
                 <UploadField
                   name="heroImageUrl"
-                  label="Hero rendering (Residence page background)"
+                  label={`Hero rendering — ${home.name} (Residence page background)`}
                   defaultValue={home.heroImageUrl ?? ""}
                 />
                 <UploadField

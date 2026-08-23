@@ -12,7 +12,7 @@ export default async function LoginPage() {
         <img
           src={heroImageUrl}
           alt=""
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-40"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60"
         />
       ) : (
         <div className="bg-grain pointer-events-none absolute inset-0" />
@@ -21,7 +21,7 @@ export default async function LoginPage() {
         className="pointer-events-none absolute inset-0"
         style={{
           background: heroImageUrl
-            ? "linear-gradient(180deg, rgba(21,19,15,0.55) 0%, rgba(21,19,15,0.75) 50%, rgba(21,19,15,0.95) 100%)"
+            ? "linear-gradient(180deg, rgba(21,19,15,0.4) 0%, rgba(21,19,15,0.62) 50%, rgba(21,19,15,0.9) 100%)"
             : undefined,
         }}
       />

@@ -69,7 +69,7 @@ export function BuilderWordmark({
     const stacked = layout === "stacked";
     return (
       <div
-        className={`flex items-center ${stacked ? "flex-col gap-2" : "flex-row gap-3"} ${className}`}
+        className={`flex items-center ${stacked ? "flex-col gap-2" : "flex-row gap-1.5"} ${className}`}
       >
         {logoIconUrl && (
           // eslint-disable-next-line @next/next/no-img-element

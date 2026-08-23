@@ -32,6 +32,11 @@ model Builder {
   // currentColor-driven vector mark that adapts to any background on its own.
   logoIconUrl     String? // the house/roofline "MJF" icon mark
   logoWordmarkUrl String? // the "MJF CONSTRUCTION & DEVELOPMENT" text lockup
+  // A generic MJF marketing photo for the login screen — deliberately
+  // separate from any Home's heroImageUrl, which is that project's own
+  // rendering/photo and shouldn't be reused somewhere it could be mistaken
+  // for a different property.
+  loginHeroImageUrl String?
   createdAt DateTime @default(now())
   homes     Home[]
   users     User[]

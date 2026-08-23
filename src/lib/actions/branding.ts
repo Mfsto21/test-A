@@ -35,12 +35,14 @@ export async function updateBuilderLogo(builderId: string, formData: FormData) {
 
   const logoIconUrl = String(formData.get("logoIconUrl") ?? "").trim();
   const logoWordmarkUrl = String(formData.get("logoWordmarkUrl") ?? "").trim();
+  const loginHeroImageUrl = String(formData.get("loginHeroImageUrl") ?? "").trim();
 
   await prisma.builder.update({
     where: { id: builderId },
     data: {
       logoIconUrl: logoIconUrl || null,
       logoWordmarkUrl: logoWordmarkUrl || null,
+      loginHeroImageUrl: loginHeroImageUrl || null,
     },
   });
 

@@ -13,7 +13,7 @@ export async function getLoginBranding() {
   });
 
   return {
-    heroImageUrl: home?.heroImageUrl ?? null,
+    heroImageUrl: home?.builder.loginHeroImageUrl ?? null,
     logoIconUrl: home?.builder.logoIconUrl ?? null,
     logoWordmarkUrl: home?.builder.logoWordmarkUrl ?? null,
   };

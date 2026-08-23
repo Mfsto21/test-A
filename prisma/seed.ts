@@ -14,6 +14,9 @@ async function main() {
       // Real MJF brand assets, supplied by the founder — see public/brand/.
       logoIconUrl: "/brand/logo-icon.png",
       logoWordmarkUrl: "/brand/logo-wordmark.png",
+      // A generic marketing photo for the login screen only — deliberately
+      // not any specific project's rendering, so it can't be confused for one.
+      loginHeroImageUrl: "/brand/login-hero.jpg",
     },
   });
 
@@ -26,7 +29,7 @@ async function main() {
       overallProgress: 35,
       currentPhase: "MEP Rough-In",
       builderId: builder.id,
-      heroImageUrl: "/brand/hero-photo.jpg",
+      heroImageUrl: "/brand/hero-photo.jpg", // the actual Kendall Hill rendering
       progressImageUrl: "/brand/progress-photo.jpg",
     },
   });
@@ -59,7 +62,7 @@ async function main() {
       order: 0,
       progress: 95,
       summary:
-        "The main residence is substantially framed. The pool room and pool bathroom are still pending, waiting on the pool permit.",
+        "The main residence is substantially framed. Pool room floor sheathing and the pool bathroom are still pending, waiting on the pool permit.",
       milestoneNote: null,
     },
   });
@@ -70,7 +73,7 @@ async function main() {
       name: "Windows & Doors",
       order: 1,
       progress: 100,
-      summary: "All windows and doors are installed, supplied by AD.",
+      summary: "All windows and doors are installed, supplied by Sierra Pacific.",
       completedAt: new Date(),
     },
   });
@@ -80,15 +83,15 @@ async function main() {
       homeId: home.id,
       name: "Plumbing",
       order: 2,
-      progress: 25,
+      progress: 40,
       summary: "Top-out is underway across the home.",
       milestoneNote: "Top-out continues over the next few weeks",
       subcategories: {
         create: [
-          { name: "Water Lines", order: 0, progress: 50 },
-          { name: "Rough-In Valves", order: 1, progress: 25 },
-          { name: "DWV", order: 2, progress: 20 },
-          { name: "Top-Out", order: 3, progress: 5 },
+          { name: "Water Lines", order: 0, progress: 70 },
+          { name: "Rough-In Valves", order: 1, progress: 45 },
+          { name: "DWV", order: 2, progress: 35 },
+          { name: "Top-Out", order: 3, progress: 10 },
         ],
       },
     },
@@ -101,7 +104,7 @@ async function main() {
       order: 3,
       progress: 0,
       summary: "Rough-in is beginning now that framing has cleared the way.",
-      milestoneNote: "Rough-in beginning",
+      milestoneNote: "Rough-in beginning August 24",
     },
   });
 
@@ -154,8 +157,8 @@ async function main() {
       name: "Roller Shutters",
       order: 8,
       progress: 0,
-      summary: "The roller shutter contractor is arriving to begin installation.",
-      milestoneNote: "Contractor arriving August 27",
+      summary: "The roller shutter contractor is coming out to take final measurements.",
+      milestoneNote: "Final measurements on August 27",
     },
   });
 
@@ -186,9 +189,31 @@ async function main() {
       homeId: home.id,
       name: "Pool",
       order: 11,
-      progress: 0,
+      progress: 30,
       summary: "The pool and pool bath are waiting on permit before work can continue.",
-      milestoneNote: "Waiting on permit — no new update yet",
+      milestoneNote: "Waiting on permit",
+    },
+  });
+
+  await prisma.trade.create({
+    data: {
+      homeId: home.id,
+      name: "Elevator",
+      order: 12,
+      progress: 30,
+      summary: "The elevator is in production.",
+      milestoneNote: "In production",
+    },
+  });
+
+  await prisma.trade.create({
+    data: {
+      homeId: home.id,
+      name: "Dehumidifier System",
+      order: 13,
+      progress: 10,
+      summary: "The dehumidifier system is in production.",
+      milestoneNote: "In production",
     },
   });
 
