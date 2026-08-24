@@ -25,7 +25,7 @@ async function main() {
       slug: "kendall-hill",
       name: "Kendall Hill",
       address: "3580 Kendell Hill Drive, Santa Rosa, CA 95404",
-      ownerLabel: "The Kendall Hill Owners",
+      ownerLabel: "Rainer & Maria Teressa Braun",
       overallProgress: 35,
       currentPhase: "MEP Rough-In",
       builderId: builder.id,
@@ -48,7 +48,7 @@ async function main() {
     data: {
       email: "owner@kendallhill.com",
       passwordHash: bcrypt.hashSync("kendallhill2026", 10),
-      name: "Kendall Hill Owners",
+      name: "Rainer & Maria Teressa Braun",
       role: "OWNER",
       homeId: home.id,
     },
