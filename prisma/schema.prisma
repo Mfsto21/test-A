@@ -8,16 +8,20 @@ generator client {
 }
 
 datasource db {
-  // SQLite for a zero-config, fully local "real database" during development
-  // and the pilot. Swap provider to "postgresql" + DATABASE_URL for a hosted
-  // Postgres (Supabase/Neon/Vercel Postgres) in production — every model
-  // below is provider-agnostic.
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  // Hosted Postgres (Neon) — one real, shared database for local dev and
+  // production alike at this stage. `url` is the pooled connection (used by
+  // the app at runtime); `directUrl` is the unpooled one Prisma needs for
+  // schema pushes/migrations, since those rely on session state that a
+  // PgBouncer-pooled connection doesn't support.
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-// SQLite has no native enum type, so Role is a plain String constrained to
-// "BUILDER" | "OWNER" in the TypeScript layer (see src/lib/session.ts).
+// Role is a plain String constrained to "BUILDER" | "OWNER" in the
+// TypeScript layer (see src/lib/session.ts) rather than a native Postgres
+// enum, since it was originally written for SQLite (no enum support) and an
+// enum migration isn't worth the churn for a two-value field.
 
 model Builder {
   id        String   @id @default(cuid())
