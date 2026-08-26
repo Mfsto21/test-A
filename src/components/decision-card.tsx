@@ -43,7 +43,15 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
   const addOption = addDecisionOption.bind(null, decision.id);
   const attachFile = setDecisionFile.bind(null, decision.id);
 
-  const statusTone = decision.status === "approved" ? "moss" : decision.status === "declined" ? "neutral" : "bronze";
+  const statusTone =
+    decision.status === "approved" ? "moss" : decision.status === "declined" ? "neutral" : "bronze";
+  const statusLabel =
+    decision.status === "pending"
+      ? "Awaiting Your Approval"
+      : decision.status === "changes_requested"
+      ? "Changes Requested"
+      : decision.status;
+  const undecided = decision.status === "pending" || decision.status === "changes_requested";
 
   return (
     <Card className={`p-7 ${decision.important ? "border-bronze-500/40 bg-bronze-500/[0.04]" : ""}`}>
@@ -60,13 +68,21 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
             </p>
           )}
         </div>
-        <Pill tone={statusTone as "moss" | "neutral" | "bronze"}>
-          {decision.status === "pending" ? "Awaiting Your Approval" : decision.status}
-        </Pill>
+        <Pill tone={statusTone as "moss" | "neutral" | "bronze"}>{statusLabel}</Pill>
       </div>
 
       {decision.options.length > 0 && (
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="mt-6">
+          {decision.status === "approved" && decision.selectedOptionId && (
+            <button
+              disabled={pending}
+              onClick={() => startTransition(() => setDecisionStatus(decision.id, "pending"))}
+              className="mb-3 text-[11px] uppercase tracking-wide text-bronze-600 hover:text-bronze-700"
+            >
+              ← Change Selection
+            </button>
+          )}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {decision.options.map((opt) => {
             const chosen = decision.selectedOptionId === opt.id;
             return (
@@ -132,6 +148,7 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
               </div>
             );
           })}
+          </div>
         </div>
       )}
 
@@ -154,8 +171,8 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
             )
           )}
 
-          {decision.status === "pending" && (
-            <div className="mt-4 flex gap-3">
+          {undecided && (
+            <div className="mt-4 flex flex-wrap gap-3">
               <button
                 disabled={pending}
                 onClick={() => startTransition(() => setDecisionStatus(decision.id, "approved"))}
@@ -165,12 +182,29 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
               </button>
               <button
                 disabled={pending}
+                onClick={() => startTransition(() => setDecisionStatus(decision.id, "changes_requested"))}
+                className="rounded-lg border border-bronze-500 px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-bronze-600 transition hover:bg-bronze-500 hover:text-paper"
+              >
+                Request Changes
+              </button>
+              <button
+                disabled={pending}
                 onClick={() => startTransition(() => setDecisionStatus(decision.id, "declined"))}
                 className="rounded-lg border hairline px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-ink-700 transition hover:border-ink-900 hover:text-ink-900"
               >
                 Decline
               </button>
             </div>
+          )}
+
+          {!undecided && (
+            <button
+              disabled={pending}
+              onClick={() => startTransition(() => setDecisionStatus(decision.id, "pending"))}
+              className="mt-4 text-[11px] uppercase tracking-wide text-bronze-600 hover:text-bronze-700"
+            >
+              ← Reopen
+            </button>
           )}
 
           {canEdit && (

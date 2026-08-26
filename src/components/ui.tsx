@@ -22,7 +22,7 @@ export function SectionIntro({
   return (
     <div className={className}>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h2 className="mt-2 max-w-2xl font-serif text-3xl leading-tight text-ink-900 sm:text-4xl">
+      <h2 className="mt-2 max-w-2xl font-serif text-3xl leading-snug text-ink-900 sm:text-4xl">
         {title}
       </h2>
       {lede && <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-700/80">{lede}</p>}

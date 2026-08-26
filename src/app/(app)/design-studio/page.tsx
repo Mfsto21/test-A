@@ -16,7 +16,9 @@ export default async function DesignStudioPage() {
     include: { options: true },
   });
 
-  const pendingCount = decisions.filter((d) => d.status === "pending").length;
+  const pendingCount = decisions.filter(
+    (d) => d.status === "pending" || d.status === "changes_requested"
+  ).length;
 
   return (
     <PageShell>

@@ -21,7 +21,10 @@ export async function chooseDecisionOption(decisionId: string, optionId: string)
   revalidatePath("/design-studio");
 }
 
-export async function setDecisionStatus(decisionId: string, status: "approved" | "declined" | "pending") {
+export async function setDecisionStatus(
+  decisionId: string,
+  status: "approved" | "declined" | "pending" | "changes_requested"
+) {
   await requireSession();
 
   await prisma.decision.update({

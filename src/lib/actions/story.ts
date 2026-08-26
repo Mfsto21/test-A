@@ -37,6 +37,26 @@ export async function publishStoryUpdate(homeId: string, formData: FormData) {
   revalidatePath("/");
 }
 
+export async function updateStoryUpdate(storyUpdateId: string, formData: FormData) {
+  await requireBuilder();
+
+  const title = String(formData.get("title") ?? "").trim();
+  const weekLabel = String(formData.get("weekLabel") ?? "").trim();
+  const narrative = String(formData.get("narrative") ?? "").trim();
+  const whatWeSee = String(formData.get("whatWeSee") ?? "").trim();
+
+  if (!title || !weekLabel || !narrative) return;
+
+  await prisma.storyUpdate.update({
+    where: { id: storyUpdateId },
+    data: { title, weekLabel, narrative, whatWeSee: whatWeSee || null },
+  });
+
+  revalidatePath(`/story/${storyUpdateId}`);
+  revalidatePath("/story");
+  revalidatePath("/");
+}
+
 export async function addStoryMedia(storyUpdateId: string, homeId: string, formData: FormData) {
   await requireBuilder();
 

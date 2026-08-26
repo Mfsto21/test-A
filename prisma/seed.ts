@@ -28,6 +28,7 @@ async function main() {
       ownerLabel: "Rainer & Maria Teressa Braun",
       overallProgress: 35,
       currentPhase: "MEP Rough-In",
+      targetCompletionDate: new Date("2027-01-01T00:00:00Z"),
       builderId: builder.id,
       heroImageUrl: "/brand/hero-photo.jpg", // the actual Kendall Hill rendering
       progressImageUrl: "/brand/progress-photo.jpg",
@@ -38,7 +39,7 @@ async function main() {
     data: {
       email: "builder@mjfconstruction.net",
       passwordHash: bcrypt.hashSync("mjfbuilder2026", 10),
-      name: "MJF Team",
+      name: "Max Franklin",
       role: "BUILDER",
       builderId: builder.id,
     },
@@ -217,15 +218,28 @@ async function main() {
     },
   });
 
+  await prisma.trade.create({
+    data: {
+      homeId: home.id,
+      name: "Interior Framing Modifications",
+      order: 14,
+      progress: 50,
+      summary:
+        "Adding double tray ceilings in 3 locations, laundry room configuration, coat closet, dining room header height, and the pool room window.",
+    },
+  });
+
   // ---- Phases / Timeline -------------------------------------------------
-  const phaseDefs: { name: string; status: string }[] = [
+  // `date` is the real date supplied for that phase — actualDate for a
+  // completed phase, expectedDate for one still current/upcoming. Phases
+  // with no real date given fall back to "today" (complete) or stay unset.
+  const phaseDefs: { name: string; status: string; date?: string }[] = [
     { name: "Design", status: "complete" },
-    { name: "Engineering", status: "complete" },
-    { name: "Permits", status: "complete" },
-    { name: "Excavation", status: "complete" },
-    { name: "Foundation", status: "complete" },
-    { name: "Framing", status: "current" },
-    { name: "Windows & Doors", status: "complete" },
+    { name: "Permits", status: "complete", date: "2025-12-04" },
+    { name: "Excavation", status: "complete", date: "2026-03-09" },
+    { name: "Foundation", status: "complete", date: "2026-05-22" },
+    { name: "Framing", status: "current", date: "2026-08-06" },
+    { name: "Windows & Doors", status: "complete", date: "2026-08-19" },
     { name: "Electrical", status: "current" },
     { name: "Plumbing", status: "current" },
     { name: "HVAC", status: "current" },
@@ -240,13 +254,16 @@ async function main() {
   ];
 
   for (let i = 0; i < phaseDefs.length; i++) {
+    const def = phaseDefs[i];
+    const explicitDate = def.date ? new Date(`${def.date}T00:00:00Z`) : null;
     await prisma.phase.create({
       data: {
         homeId: home.id,
-        name: phaseDefs[i].name,
+        name: def.name,
         order: i,
-        status: phaseDefs[i].status,
-        actualDate: phaseDefs[i].status === "complete" ? new Date() : null,
+        status: def.status,
+        actualDate: def.status === "complete" ? explicitDate ?? new Date() : null,
+        expectedDate: def.status !== "complete" ? explicitDate : null,
       },
     });
   }
@@ -260,6 +277,17 @@ async function main() {
   }
 
   // ---- Design Studio / Decisions --------------------------------------
+  await prisma.decision.create({
+    data: {
+      homeId: home.id,
+      title: "Interior Design Packet",
+      category: "Interior Design",
+      description: "All your finishes, your way.",
+      fileUrl: "/documents/kendall-hill-design-selection.pdf",
+      order: 0,
+    },
+  });
+
   const retainingWall = await prisma.decision.create({
     data: {
       homeId: home.id,
@@ -267,7 +295,7 @@ async function main() {
       category: "Landscape",
       description:
         "Two contractor proposals for the dry-stack rock retaining wall. Compare scope and pricing below, then choose the one you'd like MJF to move forward with.",
-      order: 0,
+      order: 1,
     },
   });
 
@@ -298,7 +326,7 @@ async function main() {
       title: "Outdoor Kitchen",
       category: "Kitchen",
       description: "Relocating the outdoor kitchen is currently being considered.",
-      order: 1,
+      order: 2,
     },
   });
 
@@ -308,7 +336,7 @@ async function main() {
       title: "Cabinet Drawings",
       category: "Cabinetry",
       description: "Cabinet drawings will be uploaded here as soon as they're received from the shop.",
-      order: 2,
+      order: 3,
     },
   });
 

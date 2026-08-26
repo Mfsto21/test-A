@@ -6,6 +6,7 @@ import { addStoryMedia } from "@/lib/actions/story";
 import { Card, Eyebrow, PageShell, Pill } from "@/components/ui";
 import { MediaTile } from "@/components/media-tile";
 import { UploadField } from "@/components/upload-field";
+import { StoryEditor } from "@/components/story-editor";
 import { formatDate } from "@/lib/format";
 
 export default async function StoryDetailPage({
@@ -37,6 +38,7 @@ export default async function StoryDetailPage({
         <p className="mt-2 text-[12px] uppercase tracking-wide text-ink-700/50">
           {formatDate(story.publishedAt)}
         </p>
+        {session.role === "BUILDER" && <StoryEditor story={story} />}
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-3">
