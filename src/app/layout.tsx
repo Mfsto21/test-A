@@ -2,11 +2,20 @@ import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 
+// Fraunces is a variable font whose optical-size (opsz) axis reshapes
+// letterforms — most noticeably the "j"/"J" — between a calligraphic,
+// ink-trap "text" cut at low opsz and a cleaner "display" cut at high opsz.
+// Pinning discrete static weights (the old config) locks every heading to
+// a single low-opsz instance regardless of how large it's rendered, which
+// is what made the "j" look broken/glitchy at display sizes. Loading the
+// true variable font with the opsz axis exposed lets the browser's default
+// `font-optical-sizing: auto` pick the right cut per element automatically.
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   style: ["normal", "italic"],
-  weight: ["300", "400", "500", "600"],
+  weight: "variable",
+  axes: ["opsz", "SOFT", "WONK"],
   display: "swap",
 });
 

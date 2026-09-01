@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Seeding Future Home Platform with real Kendall Hill pilot data…");
+  console.log("Seeding Future Home Platform with real Kendell Hill pilot data…");
 
   const builder = await prisma.builder.create({
     data: {
@@ -23,14 +23,14 @@ async function main() {
   const home = await prisma.home.create({
     data: {
       slug: "kendall-hill",
-      name: "Kendall Hill",
+      name: "Kendell Hill",
       address: "3580 Kendell Hill Drive, Santa Rosa, CA 95404",
-      ownerLabel: "Rainer & Maria Teressa Braun",
+      ownerLabel: "Rainer & Maria Teresa Braun",
       overallProgress: 35,
       currentPhase: "MEP Rough-In",
       targetCompletionDate: new Date("2027-01-01T00:00:00Z"),
       builderId: builder.id,
-      heroImageUrl: "/brand/hero-photo.jpg", // the actual Kendall Hill rendering
+      heroImageUrl: "/brand/hero-photo.jpg", // the actual Kendell Hill rendering
       progressImageUrl: "/brand/progress-photo.jpg",
     },
   });
@@ -49,7 +49,7 @@ async function main() {
     data: {
       email: "owner@kendallhill.com",
       passwordHash: bcrypt.hashSync("kendallhill2026", 10),
-      name: "Rainer & Maria Teressa Braun",
+      name: "Rainer & Maria Teresa Braun",
       role: "OWNER",
       homeId: home.id,
     },
@@ -238,17 +238,20 @@ async function main() {
     { name: "Permits", status: "complete", date: "2025-12-04" },
     { name: "Excavation", status: "complete", date: "2026-03-09" },
     { name: "Foundation", status: "complete", date: "2026-05-22" },
-    { name: "Framing", status: "current", date: "2026-08-06" },
+    { name: "Framing", status: "complete", date: "2026-08-05" },
     { name: "Windows & Doors", status: "complete", date: "2026-08-19" },
     { name: "Electrical", status: "current" },
     { name: "Plumbing", status: "current" },
     { name: "HVAC", status: "current" },
+    { name: "Fire Sprinklers", status: "upcoming" },
     { name: "Insulation", status: "upcoming" },
     { name: "Drywall", status: "upcoming" },
     { name: "Cabinets", status: "upcoming" },
-    { name: "Flooring", status: "upcoming" },
+    { name: "Tile", status: "upcoming" },
+    { name: "Painting", status: "upcoming" },
     { name: "Lighting", status: "upcoming" },
     { name: "Landscaping", status: "upcoming" },
+    { name: "Flatwork (Concrete/Asphalt)", status: "upcoming" },
     { name: "Final Inspection", status: "upcoming" },
     { name: "Move-In", status: "upcoming" },
   ];
@@ -359,9 +362,9 @@ async function main() {
       title: "The Frame Comes Alive",
       weekLabel: "Week of August 17, 2026",
       narrative:
-        "Imagine you're standing here with me, right in the middle of what will be your great room. The frame is up almost everywhere now — the only piece we're still waiting on is the pool room and pool bath, which need that permit before we can close them in. \n\nThis week the plumbers started top-out — that's the point where all the supply and drain lines finally reach their final runs before drywall goes up. You'll see it broken out below by water lines, rough-in valves, and DWV, because each moves at its own pace. Electrical and HVAC are starting their rough-in right behind them, so the next few weeks are going to move fast.\n\nOn the exterior, we're getting ready for roofing in the next few weeks, and the stucco crew will start with a waterproofing membrane followed by lath. The roller shutter contractor is arriving August 27, and fire sprinklers should start in about three weeks. Fascia painting is coming up after that.\n\nI know the pool is the one you're waiting to hear about — we don't have a new update yet, we're still sitting with the county on that permit. The moment it moves, you'll be the first to know.",
+        "Imagine you're standing here with me, right in the middle of what will be your great room. The frame is up almost everywhere now — the only piece we're still waiting on is the pool room and pool bath, which need that permit before we can close them in. \n\nThis week the plumbers started top-out — that's the point where all the supply and drain lines finally reach their final runs before drywall goes up. You'll see it broken out below by water lines, rough-in valves, and DWV, because each moves at its own pace. Electrical and HVAC are starting their rough-in right behind them, so the next few weeks are going to move fast.\n\nOn the exterior, we're getting ready for roofing in the next few weeks, and the stucco crew will start with a waterproofing membrane followed by lath. The roller shutter contractor is arriving August 27, and fire sprinklers should start in about three weeks. Fascia painting is coming up after that.\n\nI know the pool is the one you're waiting to hear about — we don't have a new update yet, we're still sitting with the city on that permit. The moment it moves, you'll be the first to know.",
       whatWeSee:
-        "Standing in the great room today, you can finally feel the ceiling height the drawings never quite communicate. The window wall is framed exactly where it needs to be to catch the afternoon light, and you can already see how the kitchen island will sit in relation to it. This is the moment a house on paper starts to feel like a home.",
+        "Standing in the great room today, you finally get a sense of scale the drawings never quite gave you. The ceilings soar overhead, and the two double tray ceilings we framed in are already doing exactly what they were drawn to do — pulling your eye up and out toward the windows instead of boxing the room in. Turn any direction and you're looking through open framing at the hills beyond; the views out here really are expansive, and standing in the room instead of just seeing it on paper, you understand why we fought for every inch of that window wall. This is the moment a house on paper starts to feel like a home.",
       authorId: builderUser.id,
     },
   });

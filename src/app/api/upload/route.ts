@@ -2,12 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
+import { put } from "@vercel/blob";
 import { getSession } from "@/lib/session";
 
-// Local disk storage under public/uploads — the simplest thing that's real
-// and works without provisioning cloud credentials. Every caller only ever
-// sees the returned `url`, so swapping this for S3/Supabase Storage/etc.
-// later is a one-file change; nothing else in the app needs to know.
+// Storage: Vercel Blob in any deployed environment (Vercel's serverless
+// functions have a read-only filesystem outside /tmp, so writing to
+// public/uploads there fails every time — that's what was producing the
+// "Failed to execute JSON on response" error on upload, since the route
+// threw before it could return JSON). Local disk under public/uploads is
+// used only as a fallback for local dev, where BLOB_READ_WRITE_TOKEN isn't
+// set and the filesystem is actually writable. Every caller only ever sees
+// the returned `url`, so this split is invisible to the rest of the app.
 const MAX_BYTES = 25 * 1024 * 1024; // 25MB
 
 const ALLOWED_TYPES: Record<string, string> = {
@@ -50,12 +55,25 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const uploadsDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadsDir, { recursive: true });
-
   const filename = `${randomUUID()}.${ext}`;
   const bytes = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(uploadsDir, filename), bytes);
 
-  return NextResponse.json({ url: `/uploads/${filename}` });
+  try {
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const blob = await put(`uploads/${filename}`, bytes, {
+        access: "public",
+        contentType: file.type,
+      });
+      return NextResponse.json({ url: blob.url });
+    }
+
+    const uploadsDir = path.join(process.cwd(), "public", "uploads");
+    await mkdir(uploadsDir, { recursive: true });
+    await writeFile(path.join(uploadsDir, filename), bytes);
+
+    return NextResponse.json({ url: `/uploads/${filename}` });
+  } catch (err) {
+    console.error("Upload failed:", err);
+    return NextResponse.json({ error: "Upload failed. Please try again." }, { status: 500 });
+  }
 }

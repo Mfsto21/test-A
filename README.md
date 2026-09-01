@@ -2,7 +2,7 @@
 
 A private digital residence experience for MJF Construction & Development —
 built so a remote luxury homeowner can feel present during the construction
-of their home. This is **Phase 1 (V1)**: the Kendall Hill pilot, built on an
+of their home. This is **Phase 1 (V1)**: the Kendell Hill pilot, built on an
 architecture designed to support many homes and many builders later.
 
 > "Even though I am thousands of miles away, I am still part of creating my
@@ -49,7 +49,7 @@ Builder → Home → Trade → TradeSubcategory
                 → Message (Ask MJF)
 ```
 
-Nothing is hard-coded to Kendall Hill in the application code — it's all seed
+Nothing is hard-coded to Kendell Hill in the application code — it's all seed
 data (`prisma/seed.ts`). Adding a second home for a second builder is a new
 row, not a new code path. `src/lib/current-home.ts` is the single place that
 resolves "which home is this user looking at," so a future multi-project
@@ -72,7 +72,7 @@ are explicitly later phases). What's built:
 4. **Explore Your Home** (`/plans`) — plan switcher (Site/First Floor/Lower
    Floor/Pool Room/Architectural) with drag-to-pan, zoom controls.
 5. **Design Studio** (`/design-studio`) — the Design Packet: pending
-   approvals, and the real Kendall Hill retaining-wall bid comparison
+   approvals, and the real Kendell Hill retaining-wall bid comparison
    (Canepa vs. Green Vine) as a first-class side-by-side, not two file links.
 6. **Timeline** (`/timeline`) — the 18-phase construction journey.
 7. **Home Memory** (`/home-memory`) — the Digital Time Capsule foundation
@@ -92,7 +92,7 @@ Actions in `src/lib/actions/`.
 ```bash
 npm install
 npm run db:push     # creates prisma/dev.db from the schema
-npm run db:seed      # loads the real Kendall Hill pilot data
+npm run db:seed      # loads the real Kendell Hill pilot data
 npm run dev
 ```
 

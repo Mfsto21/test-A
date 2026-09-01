@@ -57,8 +57,8 @@ export default async function StoryDetailPage({
               "{story.whatWeSee}"
             </p>
             <p className="mt-4 text-[11px] uppercase tracking-wide text-paper/40">
-              A builder's-eye read on this week — the things thirty years on
-              job sites teach you to notice.
+              A builder's-eye read on this week — what years on job sites
+              teach you to notice.
             </p>
           </Card>
         )}

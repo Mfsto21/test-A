@@ -10,10 +10,12 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts",
+    "db:update-2026-09": "tsx prisma/update-2026-09.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@vercel/blob": "^2.8.0",
     "bcryptjs": "^2.4.3",
     "framer-motion": "^11.11.17",
     "jose": "^5.9.6",

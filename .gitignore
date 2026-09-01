@@ -11,3 +11,4 @@ prisma/dev.db-journal
 npm-debug.log*
 public/uploads/*
 !public/uploads/.gitkeep
+*.tsbuildinfo
