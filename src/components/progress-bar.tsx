@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 export function ProgressBar({
   progress,
@@ -34,7 +34,9 @@ export function ProgressBar({
 }
 
 function CelebrationBurst() {
+  const reduce = useReducedMotion();
   const sparks = [0, 1, 2, 3, 4, 5];
+  if (reduce) return null;
   return (
     <div className="pointer-events-none absolute right-0 top-1/2 z-10 -translate-y-1/2">
       <motion.span
@@ -58,6 +60,23 @@ function CelebrationBurst() {
         );
       })}
     </div>
+  );
+}
+
+/** A quieter echo of CelebrationBurst's language — one soft bronze ring
+    expanding from the edge, no sparks — for moments that matter but are
+    less dramatic than a trade hitting 100% (e.g. a decision being approved). */
+export function ApprovalPulse() {
+  const reduce = useReducedMotion();
+  if (reduce) return null;
+  return (
+    <motion.span
+      aria-hidden
+      className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-bronze-400"
+      initial={{ opacity: 0.5, scale: 1 }}
+      animate={{ opacity: 0, scale: 1.02 }}
+      transition={{ duration: 0.9, ease: "easeOut" }}
+    />
   );
 }
 

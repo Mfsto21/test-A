@@ -2,6 +2,7 @@ import { requireSessionAndHome } from "@/lib/current-home";
 import { prisma } from "@/lib/prisma";
 import { PageShell, SectionIntro, Card } from "@/components/ui";
 import { TradeCard } from "@/components/trade-card";
+import { RevealStagger, RevealItem } from "@/components/reveal";
 import { updateHomeStatus } from "@/lib/actions/trades";
 
 export default async function ProgressPage() {
@@ -64,11 +65,13 @@ export default async function ProgressPage() {
         </Card>
       )}
 
-      <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-2">
+      <RevealStagger className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-2">
         {trades.map((trade) => (
-          <TradeCard key={trade.id} trade={trade} canEdit={canEdit} />
+          <RevealItem key={trade.id}>
+            <TradeCard trade={trade} canEdit={canEdit} />
+          </RevealItem>
         ))}
-      </div>
+      </RevealStagger>
     </PageShell>
   );
 }

@@ -34,7 +34,7 @@ export default async function LoginPage() {
       />
 
       <div className="relative w-full max-w-sm">
-        <div className="mb-10 flex flex-col items-center">
+        <div className="motion-safe:animate-fade-up mb-10 flex flex-col items-center">
           <BuilderWordmark
             tone="light"
             layout="stacked"
@@ -43,7 +43,10 @@ export default async function LoginPage() {
           />
         </div>
 
-        <div className="rounded-2xl border border-paper/10 bg-paper/[0.04] p-8 shadow-soft backdrop-blur-sm">
+        <div
+          className="motion-safe:animate-fade-up rounded-2xl border border-paper/10 bg-gradient-to-b from-paper/[0.06] to-paper/[0.02] p-8 shadow-soft ring-1 ring-inset ring-paper/10 backdrop-blur-sm"
+          style={{ animationDelay: "100ms" }}
+        >
           <p className="mb-1 text-[11px] uppercase tracking-widest2 text-bronze-400">
             Private Residence Access
           </p>
@@ -54,7 +57,10 @@ export default async function LoginPage() {
           <LoginForm />
         </div>
 
-        <p className="mt-8 text-center text-[11px] uppercase tracking-widest2 text-paper/30">
+        <p
+          className="motion-safe:animate-fade-up mt-8 text-center text-[11px] uppercase tracking-widest2 text-paper/30"
+          style={{ animationDelay: "200ms" }}
+        >
           Northern &amp; Southern California · Lic #1069037
         </p>
       </div>

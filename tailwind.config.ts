@@ -39,7 +39,15 @@ const config: Config = {
       },
       boxShadow: {
         soft: "0 20px 60px -20px rgba(21, 19, 15, 0.35)",
-        card: "0 1px 0 rgba(21,19,15,0.05), 0 12px 30px -18px rgba(21,19,15,0.25)",
+        card: "inset 0 1px 0 rgba(255,255,255,0.4), 0 1px 0 rgba(21,19,15,0.05), 0 12px 30px -18px rgba(21,19,15,0.25)",
+        "card-hover":
+          "inset 0 1px 0 rgba(255,255,255,0.5), 0 1px 0 rgba(21,19,15,0.06), 0 24px 48px -20px rgba(21,19,15,0.32)",
+        elevated:
+          "inset 0 1px 0 rgba(255,255,255,0.5), 0 1px 0 rgba(169,121,63,0.14), 0 28px 56px -22px rgba(21,19,15,0.38)",
+        nav: "0 1px 0 rgba(21,19,15,0.05), 0 12px 24px -18px rgba(21,19,15,0.25)",
+      },
+      transitionTimingFunction: {
+        refined: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       keyframes: {
         shimmer: {

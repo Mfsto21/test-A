@@ -2,6 +2,7 @@ import { requireSessionAndHome } from "@/lib/current-home";
 import { prisma } from "@/lib/prisma";
 import { addDocument } from "@/lib/actions/documents";
 import { Card, Eyebrow, PageShell, Pill, SectionIntro } from "@/components/ui";
+import { Reveal, RevealStagger, RevealItem } from "@/components/reveal";
 
 const CATEGORY_ORDER = ["Plans", "Selections", "Equipment", "Warranty", "Vendor", "Maintenance"];
 
@@ -54,34 +55,36 @@ export default async function HomeBiblePage() {
 
       <div className="mt-10 space-y-10">
         {grouped.map(({ category, documents }) => (
-          <div key={category}>
+          <Reveal key={category}>
             <Eyebrow>{category}</Eyebrow>
-            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <RevealStagger className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {documents.map((doc) => (
-                <Card key={doc.id} className="flex items-center justify-between p-4">
-                  <div>
-                    <p className="text-[14px] font-medium text-ink-900">{doc.name}</p>
-                    {doc.notes && <p className="mt-0.5 text-[12px] text-ink-700/60">{doc.notes}</p>}
-                  </div>
-                  {doc.fileUrl ? (
-                    <a
-                      href={doc.fileUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="shrink-0 text-[11px] uppercase tracking-wide text-bronze-600 hover:text-bronze-700"
-                    >
-                      View →
-                    </a>
-                  ) : (
-                    <Pill>Pending</Pill>
-                  )}
-                </Card>
+                <RevealItem key={doc.id}>
+                  <Card className="flex items-center justify-between p-4">
+                    <div>
+                      <p className="text-[14px] font-medium text-ink-900">{doc.name}</p>
+                      {doc.notes && <p className="mt-0.5 text-[12px] text-ink-700/60">{doc.notes}</p>}
+                    </div>
+                    {doc.fileUrl ? (
+                      <a
+                        href={doc.fileUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="shrink-0 text-[11px] uppercase tracking-wide text-bronze-600 hover:text-bronze-700"
+                      >
+                        View →
+                      </a>
+                    ) : (
+                      <Pill>Pending</Pill>
+                    )}
+                  </Card>
+                </RevealItem>
               ))}
               {documents.length === 0 && (
                 <p className="text-[13px] text-ink-700/50">Nothing here yet.</p>
               )}
-            </div>
-          </div>
+            </RevealStagger>
+          </Reveal>
         ))}
       </div>
 

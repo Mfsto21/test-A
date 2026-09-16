@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { logout } from "@/lib/actions/auth";
 import { BuilderWordmark } from "@/components/logo-mark";
 
@@ -39,6 +40,8 @@ export function Nav({
 }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const mobileActiveRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     function onScroll() {
@@ -55,6 +58,17 @@ export function Nav({
     setScrolled(window.scrollY > SCROLL_THRESHOLD);
   }, [pathname]);
 
+  // Keep the active mobile nav link visible in its horizontal-scroll row
+  // when navigating, rather than leaving it hidden off to one side.
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    mobileActiveRef.current?.scrollIntoView({
+      behavior: reduce ? "auto" : "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [pathname]);
+
   const transparent = pathname === HERO_PAGE && !scrolled;
 
   return (
@@ -62,11 +76,15 @@ export function Nav({
       className={`fixed inset-x-0 top-0 z-40 border-b transition-all duration-300 ${
         transparent
           ? "border-transparent bg-transparent"
-          : "hairline bg-paper/90 backdrop-blur-md"
+          : "hairline bg-paper/90 shadow-nav backdrop-blur-md"
       }`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-8 px-6 py-3.5">
-        <Link href="/" className="flex shrink-0 items-center gap-3" title={homeName}>
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-3 transition-transform duration-300 ease-refined motion-safe:hover:scale-[1.02]"
+          title={homeName}
+        >
           <BuilderWordmark
             tone={transparent ? "light" : "dark"}
             logoIconUrl={logoIconUrl}
@@ -94,7 +112,11 @@ export function Nav({
               >
                 {link.label}
                 {active && (
-                  <span className="absolute -bottom-[15px] left-0 right-0 h-[2px] bg-bronze-500" />
+                  <motion.span
+                    layoutId="nav-underline"
+                    className="absolute -bottom-[15px] left-0 right-0 h-[2px] bg-bronze-500"
+                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }}
+                  />
                 )}
               </Link>
             );
@@ -130,7 +152,7 @@ export function Nav({
       </div>
 
       <nav
-        className={`flex gap-4 overflow-x-auto border-t px-6 py-2 transition-colors duration-300 lg:hidden ${
+        className={`flex snap-x snap-mandatory gap-2 overflow-x-auto border-t px-6 py-2 transition-colors duration-300 [mask-image:linear-gradient(to_right,transparent,black_24px,black_calc(100%-24px),transparent)] lg:hidden ${
           transparent ? "border-paper/10" : "hairline"
         }`}
       >
@@ -141,9 +163,12 @@ export function Nav({
             <Link
               key={link.href}
               href={link.href}
-              className={`whitespace-nowrap text-[11px] uppercase tracking-wide transition-colors duration-300 ${
+              ref={active ? mobileActiveRef : undefined}
+              className={`snap-start whitespace-nowrap rounded-full px-3 py-1 text-[11px] uppercase tracking-wide transition-colors duration-300 ease-refined ${
                 active
-                  ? "text-bronze-500"
+                  ? transparent
+                    ? "bg-paper/10 text-paper"
+                    : "bg-bronze-500/10 text-bronze-600"
                   : transparent
                   ? "text-paper/50"
                   : "text-ink-700/55"

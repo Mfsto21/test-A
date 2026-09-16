@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ProgressBar, CompleteBadge } from "@/components/progress-bar";
 import { Card, Pill } from "@/components/ui";
 import { updateTradeProgress, updateSubcategoryProgress } from "@/lib/actions/trades";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 type Subcategory = { id: string; name: string; progress: number };
 type TradeLike = {
@@ -25,6 +28,7 @@ export function TradeCard({
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
   const updateTrade = updateTradeProgress.bind(null, trade.id);
+  const reduce = useReducedMotion();
 
   return (
     <Card className="p-6">
@@ -73,71 +77,93 @@ export function TradeCard({
         )}
       </div>
 
-      {open && trade.subcategories.length > 0 && (
-        <div className="mt-5 space-y-4 border-t hairline pt-5">
-          {trade.subcategories.map((sub) => (
-            <div key={sub.id}>
-              <div className="mb-1.5 flex items-center justify-between text-[12px]">
-                <span className="text-ink-800">{sub.name}</span>
-                <span className="text-ink-700/60">{sub.progress}%</span>
-              </div>
-              <ProgressBar progress={sub.progress} size="sm" />
-              {canEdit && editing && (
-                <SubcategoryEditor id={sub.id} progress={sub.progress} />
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {canEdit && editing && (
-        <form
-          action={updateTrade}
-          className="mt-5 space-y-3 border-t hairline pt-5"
-        >
-          <div className="flex items-center gap-3">
-            <label className="w-28 shrink-0 text-[11px] uppercase tracking-wide text-ink-700/60">
-              Progress %
-            </label>
-            <input
-              type="number"
-              name="progress"
-              min={0}
-              max={100}
-              defaultValue={trade.progress}
-              className="w-24 rounded-md border hairline bg-paper px-2 py-1.5 text-sm outline-none focus:border-bronze-400"
-            />
-          </div>
-          <div className="flex items-center gap-3">
-            <label className="w-28 shrink-0 text-[11px] uppercase tracking-wide text-ink-700/60">
-              Summary
-            </label>
-            <input
-              name="summary"
-              defaultValue={trade.summary ?? ""}
-              placeholder="Plain-language explanation for the homeowner"
-              className="flex-1 rounded-md border hairline bg-paper px-2 py-1.5 text-sm outline-none focus:border-bronze-400"
-            />
-          </div>
-          <div className="flex items-center gap-3">
-            <label className="w-28 shrink-0 text-[11px] uppercase tracking-wide text-ink-700/60">
-              Next up
-            </label>
-            <input
-              name="milestoneNote"
-              defaultValue={trade.milestoneNote ?? ""}
-              placeholder="e.g. Roller shutter contractor arriving 8/27"
-              className="flex-1 rounded-md border hairline bg-paper px-2 py-1.5 text-sm outline-none focus:border-bronze-400"
-            />
-          </div>
-          <button
-            type="submit"
-            className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
+      <AnimatePresence initial={false}>
+        {open && trade.subcategories.length > 0 && (
+          <motion.div
+            key="breakdown"
+            initial={reduce ? false : { height: 0, opacity: 0 }}
+            animate={reduce ? {} : { height: "auto", opacity: 1 }}
+            exit={reduce ? {} : { height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: EASE }}
+            className="overflow-hidden"
           >
-            Save
-          </button>
-        </form>
-      )}
+            <div className="mt-5 space-y-4 border-t hairline pt-5">
+              {trade.subcategories.map((sub) => (
+                <div key={sub.id}>
+                  <div className="mb-1.5 flex items-center justify-between text-[12px]">
+                    <span className="text-ink-800">{sub.name}</span>
+                    <span className="text-ink-700/60">{sub.progress}%</span>
+                  </div>
+                  <ProgressBar progress={sub.progress} size="sm" />
+                  {canEdit && editing && (
+                    <SubcategoryEditor id={sub.id} progress={sub.progress} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence initial={false}>
+        {canEdit && editing && (
+          <motion.div
+            key="editor"
+            initial={reduce ? false : { height: 0, opacity: 0 }}
+            animate={reduce ? {} : { height: "auto", opacity: 1 }}
+            exit={reduce ? {} : { height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: EASE }}
+            className="overflow-hidden"
+          >
+            <form
+              action={updateTrade}
+              className="mt-5 space-y-3 border-t hairline pt-5"
+            >
+              <div className="flex items-center gap-3">
+                <label className="w-28 shrink-0 text-[11px] uppercase tracking-wide text-ink-700/60">
+                  Progress %
+                </label>
+                <input
+                  type="number"
+                  name="progress"
+                  min={0}
+                  max={100}
+                  defaultValue={trade.progress}
+                  className="w-24 rounded-md border hairline bg-paper px-2 py-1.5 text-sm outline-none focus:border-bronze-400"
+                />
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="w-28 shrink-0 text-[11px] uppercase tracking-wide text-ink-700/60">
+                  Summary
+                </label>
+                <input
+                  name="summary"
+                  defaultValue={trade.summary ?? ""}
+                  placeholder="Plain-language explanation for the homeowner"
+                  className="flex-1 rounded-md border hairline bg-paper px-2 py-1.5 text-sm outline-none focus:border-bronze-400"
+                />
+              </div>
+              <div className="flex items-center gap-3">
+                <label className="w-28 shrink-0 text-[11px] uppercase tracking-wide text-ink-700/60">
+                  Next up
+                </label>
+                <input
+                  name="milestoneNote"
+                  defaultValue={trade.milestoneNote ?? ""}
+                  placeholder="e.g. Roller shutter contractor arriving 8/27"
+                  className="flex-1 rounded-md border hairline bg-paper px-2 py-1.5 text-sm outline-none focus:border-bronze-400"
+                />
+              </div>
+              <button
+                type="submit"
+                className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition-all duration-200 ease-refined motion-safe:hover:-translate-y-0.5 hover:bg-bronze-600 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98]"
+              >
+                Save
+              </button>
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Card>
   );
 }

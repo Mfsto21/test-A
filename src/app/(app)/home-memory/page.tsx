@@ -2,6 +2,7 @@ import { requireSessionAndHome } from "@/lib/current-home";
 import { prisma } from "@/lib/prisma";
 import { addTimeCapsuleEntry } from "@/lib/actions/memory";
 import { Card, Eyebrow, PageShell, Pill, SectionIntro } from "@/components/ui";
+import { RevealStagger, RevealItem } from "@/components/reveal";
 import { formatDate } from "@/lib/format";
 
 export default async function HomeMemoryPage() {
@@ -59,27 +60,29 @@ export default async function HomeMemoryPage() {
         </Card>
       )}
 
-      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <RevealStagger className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {entries.map((entry) => (
-          <Card key={entry.id} className="p-6">
-            <div className="flex items-center justify-between">
-              <Pill tone="bronze">{entry.system}</Pill>
-              <span className="text-[11px] uppercase tracking-wide text-ink-700/40">
-                {formatDate(entry.createdAt)}
-              </span>
-            </div>
-            <h4 className="mt-3 font-serif text-lg text-ink-900">{entry.room}</h4>
-            <p className="mt-1.5 text-[13px] leading-relaxed text-ink-700/75">
-              {entry.description}
-            </p>
-          </Card>
+          <RevealItem key={entry.id}>
+            <Card className="p-6">
+              <div className="flex items-center justify-between">
+                <Pill tone="bronze">{entry.system}</Pill>
+                <span className="text-[11px] uppercase tracking-wide text-ink-700/40">
+                  {formatDate(entry.createdAt)}
+                </span>
+              </div>
+              <h4 className="mt-3 font-serif text-lg text-ink-900">{entry.room}</h4>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-ink-700/75">
+                {entry.description}
+              </p>
+            </Card>
+          </RevealItem>
         ))}
         {entries.length === 0 && (
           <p className="text-sm text-ink-700/60">
             No captures yet — this fills in automatically as walls close.
           </p>
         )}
-      </div>
+      </RevealStagger>
 
       <Card className="mt-10 p-6">
         <Eyebrow>On the Horizon</Eyebrow>

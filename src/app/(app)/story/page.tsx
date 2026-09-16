@@ -3,6 +3,7 @@ import { requireSessionAndHome } from "@/lib/current-home";
 import { prisma } from "@/lib/prisma";
 import { publishStoryUpdate } from "@/lib/actions/story";
 import { Card, Eyebrow, PageShell, Pill, SectionIntro } from "@/components/ui";
+import { RevealStagger, RevealItem } from "@/components/reveal";
 import { formatDate } from "@/lib/format";
 
 export default async function StoryFeedPage() {
@@ -67,29 +68,31 @@ export default async function StoryFeedPage() {
         </Card>
       )}
 
-      <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
+      <RevealStagger className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
         {stories.map((story) => (
-          <Link key={story.id} href={`/story/${story.id}`} className="group block">
-            <Card className="h-full overflow-hidden transition group-hover:border-bronze-400/60">
-              <div className="p-6">
-                <Pill tone="bronze">{story.weekLabel}</Pill>
-                <h3 className="mt-3 font-serif text-xl text-ink-900">{story.title}</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-ink-700/70">
-                  {story.narrative.slice(0, 180)}
-                  {story.narrative.length > 180 ? "…" : ""}
-                </p>
-                <div className="mt-4 flex items-center justify-between text-[11px] uppercase tracking-wide text-ink-700/50">
-                  <span>{formatDate(story.publishedAt)}</span>
-                  <span className="text-bronze-600 group-hover:text-bronze-700">Read →</span>
+          <RevealItem key={story.id}>
+            <Link href={`/story/${story.id}`} className="group block">
+              <Card interactive className="h-full overflow-hidden">
+                <div className="p-6">
+                  <Pill tone="bronze">{story.weekLabel}</Pill>
+                  <h3 className="mt-3 font-serif text-xl text-ink-900">{story.title}</h3>
+                  <p className="mt-2 text-[13px] leading-relaxed text-ink-700/70">
+                    {story.narrative.slice(0, 180)}
+                    {story.narrative.length > 180 ? "…" : ""}
+                  </p>
+                  <div className="mt-4 flex items-center justify-between text-[11px] uppercase tracking-wide text-ink-700/50">
+                    <span>{formatDate(story.publishedAt)}</span>
+                    <span className="text-bronze-600 group-hover:text-bronze-700">Read →</span>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </Link>
+              </Card>
+            </Link>
+          </RevealItem>
         ))}
         {stories.length === 0 && (
           <p className="text-sm text-ink-700/60">No stories published yet.</p>
         )}
-      </div>
+      </RevealStagger>
     </PageShell>
   );
 }

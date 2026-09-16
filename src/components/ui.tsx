@@ -33,9 +33,15 @@ export function SectionIntro({
 export function Card({
   children,
   className = "",
+  interactive = false,
+  elevated = false,
 }: {
   children: ReactNode;
   className?: string;
+  /** Adds a hover lift + deeper shadow for cards that are clickable/whole-card links. */
+  interactive?: boolean;
+  /** Gives the card extra visual weight (deeper shadow) for the things that matter most. */
+  elevated?: boolean;
 }) {
   // Utility classes with equal specificity are ordered by where they land in
   // the compiled stylesheet, not by position in this string — so a caller
@@ -44,18 +50,34 @@ export function Card({
   const hasBgOverride = /(^|\s)bg-/.test(className);
   return (
     <div
-      className={`rounded-2xl border hairline shadow-card ${hasBgOverride ? "" : "bg-paper-50"} ${className}`}
+      className={`card-sheen rounded-2xl border hairline transition-[transform,box-shadow] duration-300 ease-refined ${
+        elevated ? "shadow-elevated" : "shadow-card"
+      } ${
+        interactive
+          ? "motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-card-hover motion-safe:active:translate-y-0"
+          : ""
+      } ${hasBgOverride ? "" : "bg-paper-50"} ${className}`}
     >
       {children}
     </div>
   );
 }
 
-export function Stat({ value, label }: { value: string; label: string }) {
+export function Stat({
+  value,
+  label,
+  tone = "dark",
+}: {
+  value: string;
+  label: string;
+  tone?: "dark" | "light";
+}) {
+  const valueColor = tone === "light" ? "text-paper" : "text-ink-900";
+  const labelColor = tone === "light" ? "text-paper/50" : "text-ink-700/60";
   return (
     <div>
-      <div className="font-serif text-3xl text-ink-900">{value}</div>
-      <div className="mt-1 text-[11px] uppercase tracking-wide text-ink-700/60">
+      <div className={`font-serif text-3xl ${valueColor}`}>{value}</div>
+      <div className={`mt-1 text-[11px] uppercase tracking-wide ${labelColor}`}>
         {label}
       </div>
     </div>
@@ -76,7 +98,7 @@ export function Pill({
   };
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide ${tones[tone]}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide transition-colors duration-300 ease-refined ${tones[tone]}`}
     >
       {children}
     </span>
@@ -96,12 +118,20 @@ export function PageShell({
   // transparently), which means every other page has to compensate with its
   // own top clearance — the nav no longer reserves space in normal flow.
   return (
-    <div
-      className={`mx-auto max-w-6xl px-6 pb-12 sm:pb-16 ${
-        noTopClearance ? "pt-12 sm:pt-16" : "pt-28 sm:pt-32"
-      }`}
-    >
-      {children}
+    <div className="relative">
+      {/* A quiet echo of the hero's own bronze glow, so interior pages don't
+          drop so abruptly from the hero into flat cards. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(169,121,63,0.07),transparent)]"
+      />
+      <div
+        className={`mx-auto max-w-6xl px-6 pb-12 sm:pb-16 ${
+          noTopClearance ? "pt-12 sm:pt-16" : "pt-28 sm:pt-32"
+        }`}
+      >
+        {children}
+      </div>
     </div>
   );
 }

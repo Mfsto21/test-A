@@ -2,6 +2,7 @@ import { requireSessionAndHome } from "@/lib/current-home";
 import { prisma } from "@/lib/prisma";
 import { PageShell, SectionIntro } from "@/components/ui";
 import { PlansExplorer } from "@/components/plans-explorer";
+import { Reveal } from "@/components/reveal";
 
 export default async function PlansPage() {
   const { session, home } = await requireSessionAndHome();
@@ -23,9 +24,9 @@ export default async function PlansPage() {
         lede="Switch between the site plan, each floor, and the architectural set — then zoom in on exactly what you want to see."
       />
 
-      <div className="mt-10">
+      <Reveal className="mt-10">
         <PlansExplorer plans={plans} canEdit={session.role === "BUILDER"} />
-      </div>
+      </Reveal>
     </PageShell>
   );
 }

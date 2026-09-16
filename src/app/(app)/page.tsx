@@ -5,7 +5,8 @@ import { formatDate, formatShortDate, daysUntil } from "@/lib/format";
 import { HouseIllustration } from "@/components/house-illustration";
 import { Ticker } from "@/components/ticker";
 import { ProgressBar, CompleteBadge } from "@/components/progress-bar";
-import { Card, Eyebrow, Pill, PageShell, SectionIntro } from "@/components/ui";
+import { Card, Eyebrow, Pill, PageShell, SectionIntro, Stat } from "@/components/ui";
+import { Reveal, RevealStagger, RevealItem } from "@/components/reveal";
 import { UploadField } from "@/components/upload-field";
 import { updateHomePhotos, updateBuilderLogo } from "@/lib/actions/branding";
 
@@ -65,51 +66,47 @@ export default async function ResidencePage() {
         />
 
         <div className="relative mx-auto w-full max-w-6xl px-6 pb-14 pt-40">
-          <p className="text-[11px] uppercase tracking-widest2 text-paper/50">
+          <p className="motion-safe:animate-fade-up text-[11px] uppercase tracking-widest2 text-paper/50">
             MJF Construction &amp; Development · Northern &amp; Southern California · Lic #1069037
           </p>
-          <p className="mt-6 text-[12px] font-medium uppercase tracking-widest2 text-bronze-400">
+          <p
+            className="motion-safe:animate-fade-up mt-6 text-[12px] font-medium uppercase tracking-widest2 text-bronze-400"
+            style={{ animationDelay: "80ms" }}
+          >
             Private Luxury Residence
           </p>
-          <h1 className="mt-3 font-serif text-5xl leading-[1.05] sm:text-7xl">
+          <h1
+            className="motion-safe:animate-fade-up mt-3 font-serif text-5xl leading-[1.05] sm:text-7xl"
+            style={{ animationDelay: "160ms" }}
+          >
             {home.name.split(" ")[0]}{" "}
             <em className="italic text-bronze-300">
               {home.name.split(" ").slice(1).join(" ") || "Residence"}
             </em>
           </h1>
-          <p className="mt-4 text-lg text-paper/70">{home.address}</p>
+          <p
+            className="motion-safe:animate-fade-up mt-4 text-lg text-paper/70"
+            style={{ animationDelay: "220ms" }}
+          >
+            {home.address}
+          </p>
 
-          <div className="mt-12 grid grid-cols-2 gap-8 border-t border-paper/10 pt-8 sm:grid-cols-4">
-            <div>
-              <div className="font-serif text-4xl text-paper">{home.overallProgress}%</div>
-              <div className="mt-1 text-[11px] uppercase tracking-wide text-paper/50">
-                Overall Complete
-              </div>
-            </div>
-            <div>
-              <div className="font-serif text-4xl text-paper">
-                {home.currentPhase ?? "—"}
-              </div>
-              <div className="mt-1 text-[11px] uppercase tracking-wide text-paper/50">
-                Current Phase
-              </div>
-            </div>
-            <div>
-              <div className="font-serif text-4xl text-paper">
-                {days && days > 0 ? days : "—"}
-              </div>
-              <div className="mt-1 text-[11px] uppercase tracking-wide text-paper/50">
-                {days && days > 0 ? "Days to Target" : "Target Date TBD"}
-              </div>
-            </div>
-            <div>
-              <div className="font-serif text-4xl text-paper">
-                {formatShortDate(home.targetCompletionDate) ?? "—"}
-              </div>
-              <div className="mt-1 text-[11px] uppercase tracking-wide text-paper/50">
-                Target Completion
-              </div>
-            </div>
+          <div
+            className="motion-safe:animate-fade-up mt-12 grid grid-cols-2 gap-8 border-t border-paper/10 pt-8 sm:grid-cols-4"
+            style={{ animationDelay: "300ms" }}
+          >
+            <Stat tone="light" value={`${home.overallProgress}%`} label="Overall Complete" />
+            <Stat tone="light" value={home.currentPhase ?? "—"} label="Current Phase" />
+            <Stat
+              tone="light"
+              value={days && days > 0 ? String(days) : "—"}
+              label={days && days > 0 ? "Days to Target" : "Target Date TBD"}
+            />
+            <Stat
+              tone="light"
+              value={formatShortDate(home.targetCompletionDate) ?? "—"}
+              label="Target Completion"
+            />
           </div>
         </div>
       </section>
@@ -180,7 +177,7 @@ export default async function ResidencePage() {
 
         {/* THE HOME STORY teaser */}
         {latestStory && (
-          <section className="mb-20">
+          <Reveal as="section" className="mb-20">
             <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
               <SectionIntro
                 eyebrow="The Home Story"
@@ -198,7 +195,7 @@ export default async function ResidencePage() {
               </Link>
             </div>
 
-            <Card className="mt-8 grid grid-cols-1 overflow-hidden md:grid-cols-5">
+            <Card interactive className="mt-8 grid grid-cols-1 overflow-hidden md:grid-cols-5">
               <div className="relative col-span-2 flex min-h-[240px] items-end bg-ink-900 p-8 text-paper">
                 {home.progressImageUrl ? (
                   <>
@@ -235,11 +232,11 @@ export default async function ResidencePage() {
                 )}
               </div>
             </Card>
-          </section>
+          </Reveal>
         )}
 
         {/* BUILD PROGRESS snapshot */}
-        <section className="mb-20">
+        <Reveal as="section" className="mb-20">
           <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
             <SectionIntro
               eyebrow="Build Progress"
@@ -257,36 +254,45 @@ export default async function ResidencePage() {
             </Link>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealStagger className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {trades.slice(0, 6).map((trade) => (
-              <Card key={trade.id} className="p-6">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-serif text-lg text-ink-900">{trade.name}</h4>
-                  {trade.progress >= 100 ? (
-                    <CompleteBadge />
-                  ) : (
-                    <span className="font-serif text-lg text-ink-900">
-                      {trade.progress}%
-                    </span>
+              <RevealItem key={trade.id}>
+                <Card className="p-6">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-serif text-lg text-ink-900">{trade.name}</h4>
+                    {trade.progress >= 100 ? (
+                      <CompleteBadge />
+                    ) : (
+                      <span className="font-serif text-lg text-ink-900">
+                        {trade.progress}%
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-4">
+                    <ProgressBar progress={trade.progress} />
+                  </div>
+                  {trade.summary && (
+                    <p className="mt-3 text-[13px] leading-relaxed text-ink-700/70">
+                      {trade.summary}
+                    </p>
                   )}
-                </div>
-                <div className="mt-4">
-                  <ProgressBar progress={trade.progress} />
-                </div>
-                {trade.summary && (
-                  <p className="mt-3 text-[13px] leading-relaxed text-ink-700/70">
-                    {trade.summary}
-                  </p>
-                )}
-              </Card>
+                </Card>
+              </RevealItem>
             ))}
-          </div>
-        </section>
+          </RevealStagger>
+        </Reveal>
 
         {/* POOL — prominent because it matters to the owners */}
         {poolDecision && (
-          <section className="mb-20">
-            <Card className="flex flex-col items-start justify-between gap-6 border-bronze-500/30 bg-bronze-500/[0.06] p-8 sm:flex-row sm:items-center">
+          <Reveal as="section" className="mb-20">
+            <Card
+              elevated
+              className="relative flex flex-col items-start justify-between gap-6 overflow-hidden border-bronze-500/30 bg-bronze-500/[0.06] p-8 sm:flex-row sm:items-center"
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-bronze-500/10 blur-3xl"
+              />
               <div>
                 <Eyebrow>Personally Important To You</Eyebrow>
                 <h3 className="mt-2 font-serif text-2xl text-ink-900">The Pool</h3>
@@ -297,12 +303,12 @@ export default async function ResidencePage() {
               </div>
               <Pill tone="bronze">{poolDecision.status === "pending" ? "Waiting on Permit" : poolDecision.status}</Pill>
             </Card>
-          </section>
+          </Reveal>
         )}
 
         {/* THE NEXT CHAPTER */}
         {upcoming.length > 0 && (
-          <section className="mb-20">
+          <Reveal as="section" className="mb-20">
             <SectionIntro
               eyebrow="The Next Chapter"
               title={
@@ -329,15 +335,21 @@ export default async function ResidencePage() {
                 </div>
               ))}
             </div>
-          </section>
+          </Reveal>
         )}
 
         {/* QUICK LINKS */}
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <QuickLink href="/plans" title="Explore Your Home" body="Site plan, floors, and architectural drawings." />
-          <QuickLink href="/design-studio" title="Design Studio" body="Finalize selections and compare vendor proposals." />
-          <QuickLink href="/ask-mjf" title="Ask MJF" body="A direct line to your builder — every answer, kept." />
-        </section>
+        <RevealStagger className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <RevealItem>
+            <QuickLink href="/plans" title="Explore Your Home" body="Site plan, floors, and architectural drawings." />
+          </RevealItem>
+          <RevealItem>
+            <QuickLink href="/design-studio" title="Design Studio" body="Finalize selections and compare vendor proposals." />
+          </RevealItem>
+          <RevealItem>
+            <QuickLink href="/ask-mjf" title="Ask MJF" body="A direct line to your builder — every answer, kept." />
+          </RevealItem>
+        </RevealStagger>
       </PageShell>
     </div>
   );
@@ -346,7 +358,7 @@ export default async function ResidencePage() {
 function QuickLink({ href, title, body }: { href: string; title: string; body: string }) {
   return (
     <Link href={href} className="group block">
-      <Card className="h-full p-6 transition group-hover:border-bronze-400/60">
+      <Card interactive className="h-full p-6">
         <h4 className="font-serif text-lg text-ink-900">{title}</h4>
         <p className="mt-2 text-[13px] leading-relaxed text-ink-700/70">{body}</p>
         <span className="mt-4 inline-block text-[11px] uppercase tracking-wide text-bronze-600 group-hover:text-bronze-700">

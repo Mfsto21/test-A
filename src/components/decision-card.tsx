@@ -1,14 +1,20 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Card, Eyebrow, Pill } from "@/components/ui";
 import { UploadField } from "@/components/upload-field";
+import { ApprovalPulse } from "@/components/progress-bar";
 import {
   chooseDecisionOption,
   setDecisionStatus,
   addDecisionOption,
   setDecisionFile,
 } from "@/lib/actions/decisions";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+const BUTTON_MOTION =
+  "motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98]";
 
 type Option = {
   id: string;
@@ -42,6 +48,7 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
   const [attachingFile, setAttachingFile] = useState(false);
   const addOption = addDecisionOption.bind(null, decision.id);
   const attachFile = setDecisionFile.bind(null, decision.id);
+  const reduce = useReducedMotion();
 
   const statusTone =
     decision.status === "approved" ? "moss" : decision.status === "declined" ? "neutral" : "bronze";
@@ -54,7 +61,19 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
   const undecided = decision.status === "pending" || decision.status === "changes_requested";
 
   return (
-    <Card className={`p-7 ${decision.important ? "border-bronze-500/40 bg-bronze-500/[0.04]" : ""}`}>
+    <Card
+      elevated={decision.important}
+      className={`relative overflow-hidden p-7 ${
+        decision.important ? "border-bronze-500/40 bg-bronze-500/[0.04]" : ""
+      }`}
+    >
+      {decision.important && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-bronze-500/10 blur-3xl"
+        />
+      )}
+      {decision.status === "approved" && <ApprovalPulse />}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -88,8 +107,10 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
             return (
               <div
                 key={opt.id}
-                className={`rounded-xl border p-5 transition ${
-                  chosen ? "border-bronze-500 bg-bronze-500/[0.06]" : "hairline"
+                className={`rounded-xl border p-5 transition-colors duration-300 ease-refined ${
+                  chosen
+                    ? "border-bronze-500 bg-bronze-500/[0.06] ring-1 ring-bronze-500/20"
+                    : "hairline hover:border-bronze-300 hover:bg-bronze-500/[0.03]"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -140,7 +161,7 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
                     onClick={() =>
                       startTransition(() => chooseDecisionOption(decision.id, opt.id))
                     }
-                    className="mt-4 w-full rounded-lg border border-ink-900 py-2 text-[11px] font-medium uppercase tracking-wide text-ink-900 transition hover:bg-ink-900 hover:text-paper"
+                    className={`mt-4 w-full rounded-lg border border-ink-900 py-2 text-[11px] font-medium uppercase tracking-wide text-ink-900 transition-all duration-200 ease-refined hover:bg-ink-900 hover:text-paper ${BUTTON_MOTION}`}
                   >
                     Choose This Proposal
                   </button>
@@ -176,21 +197,21 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
               <button
                 disabled={pending}
                 onClick={() => startTransition(() => setDecisionStatus(decision.id, "approved"))}
-                className="rounded-lg bg-ink-900 px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
+                className={`rounded-lg bg-ink-900 px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition-all duration-200 ease-refined hover:bg-bronze-600 ${BUTTON_MOTION}`}
               >
                 Approve
               </button>
               <button
                 disabled={pending}
                 onClick={() => startTransition(() => setDecisionStatus(decision.id, "changes_requested"))}
-                className="rounded-lg border border-bronze-500 px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-bronze-600 transition hover:bg-bronze-500 hover:text-paper"
+                className={`rounded-lg border border-bronze-500 px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-bronze-600 transition-all duration-200 ease-refined hover:bg-bronze-500 hover:text-paper ${BUTTON_MOTION}`}
               >
                 Request Changes
               </button>
               <button
                 disabled={pending}
                 onClick={() => startTransition(() => setDecisionStatus(decision.id, "declined"))}
-                className="rounded-lg border hairline px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-ink-700 transition hover:border-ink-900 hover:text-ink-900"
+                className={`rounded-lg border hairline px-5 py-2 text-[11px] font-medium uppercase tracking-wide text-ink-700 transition-all duration-200 ease-refined hover:border-ink-900 hover:text-ink-900 ${BUTTON_MOTION}`}
               >
                 Decline
               </button>
@@ -215,22 +236,33 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
               >
                 {attachingFile ? "Close" : decision.fileUrl ? "Replace Document" : "+ Attach Document"}
               </button>
-              {attachingFile && (
-                <form action={attachFile} className="mt-3 flex flex-wrap items-center gap-2">
-                  <UploadField
-                    name="fileUrl"
-                    defaultValue={decision.fileUrl ?? ""}
-                    accept="image/*,.pdf"
-                    placeholder="Paste a URL, or upload a drawing / PDF"
-                  />
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"
+              <AnimatePresence initial={false}>
+                {attachingFile && (
+                  <motion.div
+                    key="attach-file"
+                    initial={reduce ? false : { height: 0, opacity: 0 }}
+                    animate={reduce ? {} : { height: "auto", opacity: 1 }}
+                    exit={reduce ? {} : { height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: EASE }}
+                    className="overflow-hidden"
                   >
-                    Save
-                  </button>
-                </form>
-              )}
+                    <form action={attachFile} className="mt-3 flex flex-wrap items-center gap-2">
+                      <UploadField
+                        name="fileUrl"
+                        defaultValue={decision.fileUrl ?? ""}
+                        accept="image/*,.pdf"
+                        placeholder="Paste a URL, or upload a drawing / PDF"
+                      />
+                      <button
+                        type="submit"
+                        className={`rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition-all duration-200 ease-refined hover:bg-bronze-600 ${BUTTON_MOTION}`}
+                      >
+                        Save
+                      </button>
+                    </form>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )}
         </>
@@ -244,27 +276,38 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
           >
             {addingOption ? "Close" : "+ Add Vendor Proposal"}
           </button>
-          {addingOption && (
-            <form action={addOption} className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-              <input name="vendorName" placeholder="Vendor / contractor name" required className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
-              <input name="amount" type="number" step="0.01" placeholder="Amount ($)" className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
-              <input name="scope" placeholder="Scope of work" className="col-span-full rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
-              <input name="inclusions" placeholder="Inclusions" className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
-              <input name="exclusions" placeholder="Exclusions" className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
-              <input name="notes" placeholder="Notes" className="col-span-full rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
-              <UploadField
-                name="fileUrl"
-                accept="image/*,.pdf"
-                placeholder="Paste a URL, or upload the proposal PDF"
-              />
-              <label className="flex items-center gap-2 text-[12px] text-ink-700">
-                <input type="checkbox" name="recommended" /> MJF recommends this option
-              </label>
-              <button type="submit" className="ml-auto rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600">
-                Add Proposal
-              </button>
-            </form>
-          )}
+          <AnimatePresence initial={false}>
+            {addingOption && (
+              <motion.div
+                key="add-option"
+                initial={reduce ? false : { height: 0, opacity: 0 }}
+                animate={reduce ? {} : { height: "auto", opacity: 1 }}
+                exit={reduce ? {} : { height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: EASE }}
+                className="overflow-hidden"
+              >
+                <form action={addOption} className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  <input name="vendorName" placeholder="Vendor / contractor name" required className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
+                  <input name="amount" type="number" step="0.01" placeholder="Amount ($)" className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
+                  <input name="scope" placeholder="Scope of work" className="col-span-full rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
+                  <input name="inclusions" placeholder="Inclusions" className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
+                  <input name="exclusions" placeholder="Exclusions" className="rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
+                  <input name="notes" placeholder="Notes" className="col-span-full rounded-md border hairline bg-paper px-2.5 py-2 text-sm outline-none focus:border-bronze-400" />
+                  <UploadField
+                    name="fileUrl"
+                    accept="image/*,.pdf"
+                    placeholder="Paste a URL, or upload the proposal PDF"
+                  />
+                  <label className="flex items-center gap-2 text-[12px] text-ink-700">
+                    <input type="checkbox" name="recommended" /> MJF recommends this option
+                  </label>
+                  <button type="submit" className={`ml-auto rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition-all duration-200 ease-refined hover:bg-bronze-600 ${BUTTON_MOTION}`}>
+                    Add Proposal
+                  </button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
     </Card>

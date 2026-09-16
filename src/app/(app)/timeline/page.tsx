@@ -2,6 +2,7 @@ import { requireSessionAndHome } from "@/lib/current-home";
 import { prisma } from "@/lib/prisma";
 import { PageShell, SectionIntro } from "@/components/ui";
 import { PhaseRow } from "@/components/phase-row";
+import { Reveal } from "@/components/reveal";
 
 export default async function TimelinePage() {
   const { session, home } = await requireSessionAndHome();
@@ -23,7 +24,7 @@ export default async function TimelinePage() {
         lede="Every chapter of your home's construction, in order — where you've been, where you are, and what's still ahead."
       />
 
-      <div className="mt-12">
+      <Reveal className="mt-12">
         {phases.map((phase, i) => (
           <PhaseRow
             key={phase.id}
@@ -32,7 +33,7 @@ export default async function TimelinePage() {
             canEdit={session.role === "BUILDER"}
           />
         ))}
-      </div>
+      </Reveal>
     </PageShell>
   );
 }

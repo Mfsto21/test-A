@@ -37,7 +37,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
-      <body className="bg-paper font-sans text-ink-900 antialiased">
+      <body className="bg-paper bg-grain-light font-sans text-ink-900 antialiased">
         {children}
       </body>
     </html>

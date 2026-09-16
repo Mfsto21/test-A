@@ -2,6 +2,7 @@ import { requireSessionAndHome } from "@/lib/current-home";
 import { prisma } from "@/lib/prisma";
 import { PageShell, SectionIntro, Eyebrow, Card } from "@/components/ui";
 import { DecisionCard } from "@/components/decision-card";
+import { RevealStagger, RevealItem } from "@/components/reveal";
 
 export default async function DesignStudioPage() {
   const { session, home } = await requireSessionAndHome();
@@ -43,18 +44,16 @@ export default async function DesignStudioPage() {
         </div>
       </Card>
 
-      <div className="mt-8 space-y-6">
+      <RevealStagger className="mt-8 space-y-6">
         {decisions.map((decision) => (
-          <DecisionCard
-            key={decision.id}
-            decision={decision}
-            canEdit={session.role === "BUILDER"}
-          />
+          <RevealItem key={decision.id}>
+            <DecisionCard decision={decision} canEdit={session.role === "BUILDER"} />
+          </RevealItem>
         ))}
         {decisions.length === 0 && (
           <p className="text-sm text-ink-700/60">No design items yet.</p>
         )}
-      </div>
+      </RevealStagger>
     </PageShell>
   );
 }
