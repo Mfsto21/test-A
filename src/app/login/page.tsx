@@ -12,7 +12,7 @@ export default async function LoginPage() {
         <img
           src={heroImageUrl}
           alt=""
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-60"
+          className="pointer-events-none absolute inset-0 h-full w-full origin-center object-cover opacity-60 motion-safe:animate-kenburns"
         />
       ) : (
         <div className="bg-grain pointer-events-none absolute inset-0" />

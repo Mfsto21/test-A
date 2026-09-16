@@ -156,7 +156,7 @@ export function TradeCard({
               </div>
               <button
                 type="submit"
-                className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition-all duration-200 ease-refined motion-safe:hover:-translate-y-0.5 hover:bg-bronze-600 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98]"
+                className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition-all duration-200 ease-refined motion-safe:hover:-translate-y-1 motion-safe:hover:scale-[1.03] hover:bg-bronze-600 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.97]"
               >
                 Save
               </button>

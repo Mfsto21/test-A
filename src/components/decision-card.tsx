@@ -14,7 +14,7 @@ import {
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const BUTTON_MOTION =
-  "motion-safe:hover:-translate-y-0.5 motion-safe:active:translate-y-0 motion-safe:active:scale-[0.98]";
+  "motion-safe:hover:-translate-y-1 motion-safe:hover:scale-[1.03] motion-safe:active:translate-y-0 motion-safe:active:scale-[0.97]";
 
 type Option = {
   id: string;
@@ -70,7 +70,7 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
       {decision.important && (
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-bronze-500/10 blur-3xl"
+          className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-bronze-500/20 blur-3xl"
         />
       )}
       {decision.status === "approved" && <ApprovalPulse />}

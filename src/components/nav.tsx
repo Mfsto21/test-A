@@ -82,7 +82,7 @@ export function Nav({
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-8 px-6 py-3.5">
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-3 transition-transform duration-300 ease-refined motion-safe:hover:scale-[1.02]"
+          className="flex shrink-0 items-center gap-3 transition-transform duration-300 ease-refined motion-safe:hover:scale-[1.06]"
           title={homeName}
         >
           <BuilderWordmark
@@ -100,7 +100,7 @@ export function Nav({
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative py-1 text-[12px] uppercase tracking-wide transition-colors duration-300 ${
+                className={`relative py-1 text-[12px] uppercase tracking-wide transition-all duration-300 ease-refined motion-safe:hover:-translate-y-0.5 ${
                   active
                     ? transparent
                       ? "text-paper"
@@ -114,8 +114,8 @@ export function Nav({
                 {active && (
                   <motion.span
                     layoutId="nav-underline"
-                    className="absolute -bottom-[15px] left-0 right-0 h-[2px] bg-bronze-500"
-                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }}
+                    className="absolute -bottom-[15px] left-0 right-0 h-[3px] rounded-full bg-bronze-500"
+                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 30 }}
                   />
                 )}
               </Link>

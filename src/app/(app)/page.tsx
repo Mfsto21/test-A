@@ -41,7 +41,7 @@ export default async function ResidencePage() {
           <img
             src={home.heroImageUrl}
             alt={home.name}
-            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            className="pointer-events-none absolute inset-0 h-full w-full origin-center object-cover motion-safe:animate-kenburns"
           />
         ) : (
           <>
@@ -203,7 +203,7 @@ export default async function ResidencePage() {
                     <img
                       src={home.progressImageUrl}
                       alt="Current progress"
-                      className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                      className="pointer-events-none absolute inset-0 h-full w-full origin-center object-cover motion-safe:animate-kenburns"
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/20 to-transparent" />
                   </>
@@ -291,7 +291,7 @@ export default async function ResidencePage() {
             >
               <div
                 aria-hidden
-                className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-bronze-500/10 blur-3xl"
+                className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-bronze-500/20 blur-3xl"
               />
               <div>
                 <Eyebrow>Personally Important To You</Eyebrow>

@@ -54,7 +54,7 @@ export function Card({
         elevated ? "shadow-elevated" : "shadow-card"
       } ${
         interactive
-          ? "motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-card-hover motion-safe:active:translate-y-0"
+          ? "motion-safe:hover:-translate-y-2 motion-safe:hover:scale-[1.015] motion-safe:hover:shadow-card-hover motion-safe:active:translate-y-0 motion-safe:active:scale-100"
           : ""
       } ${hasBgOverride ? "" : "bg-paper-50"} ${className}`}
     >
@@ -123,7 +123,7 @@ export function PageShell({
           drop so abruptly from the hero into flat cards. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_60%_50%_at_50%_-10%,rgba(169,121,63,0.07),transparent)]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px] bg-[radial-gradient(ellipse_65%_55%_at_50%_-10%,rgba(169,121,63,0.14),transparent)]"
       />
       <div
         className={`mx-auto max-w-6xl px-6 pb-12 sm:pb-16 ${
