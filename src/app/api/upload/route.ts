@@ -10,9 +10,16 @@ import { getSession } from "@/lib/session";
 // public/uploads there fails every time — that's what was producing the
 // "Failed to execute JSON on response" error on upload, since the route
 // threw before it could return JSON). Local disk under public/uploads is
-// used only as a fallback for local dev, where BLOB_READ_WRITE_TOKEN isn't
-// set and the filesystem is actually writable. Every caller only ever sees
-// the returned `url`, so this split is invisible to the rest of the app.
+// used only as a fallback for local dev, where the filesystem is actually
+// writable. Every caller only ever sees the returned `url`, so this split
+// is invisible to the rest of the app.
+//
+// The Blob store can be connected to the project either the classic way
+// (a BLOB_READ_WRITE_TOKEN env var) or via Vercel's newer OIDC-based
+// connection, which instead sets BLOB_STORE_ID and authenticates at
+// runtime with an auto-injected VERCEL_OIDC_TOKEN that @vercel/blob's
+// put() resolves on its own — so either env var indicates Blob is usable
+// here, and put() itself picks whichever credential is actually present.
 const MAX_BYTES = 25 * 1024 * 1024; // 25MB
 
 const ALLOWED_TYPES: Record<string, string> = {
@@ -59,7 +66,7 @@ export async function POST(req: NextRequest) {
   const bytes = Buffer.from(await file.arrayBuffer());
 
   try {
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
+    if (process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID) {
       const blob = await put(`uploads/${filename}`, bytes, {
         access: "public",
         contentType: file.type,
