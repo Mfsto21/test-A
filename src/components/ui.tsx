@@ -35,6 +35,7 @@ export function Card({
   className = "",
   interactive = false,
   elevated = false,
+  sheen = true,
 }: {
   children: ReactNode;
   className?: string;
@@ -42,6 +43,9 @@ export function Card({
   interactive?: boolean;
   /** Gives the card extra visual weight (deeper shadow) for the things that matter most. */
   elevated?: boolean;
+  /** The diagonal light highlight suited to plain cream cards — turn off for
+   * cards that contain full-bleed photos, where it washes out the image. */
+  sheen?: boolean;
 }) {
   // Utility classes with equal specificity are ordered by where they land in
   // the compiled stylesheet, not by position in this string — so a caller
@@ -50,7 +54,7 @@ export function Card({
   const hasBgOverride = /(^|\s)bg-/.test(className);
   return (
     <div
-      className={`card-sheen rounded-2xl border hairline transition-[transform,box-shadow] duration-300 ease-refined ${
+      className={`${sheen ? "card-sheen" : ""} rounded-2xl border hairline transition-[transform,box-shadow] duration-300 ease-refined ${
         elevated ? "shadow-elevated" : "shadow-card"
       } ${
         interactive

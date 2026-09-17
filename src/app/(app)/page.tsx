@@ -195,7 +195,7 @@ export default async function ResidencePage() {
               </Link>
             </div>
 
-            <Card interactive className="mt-8 grid grid-cols-1 overflow-hidden md:grid-cols-5">
+            <Card interactive sheen={false} className="mt-8 grid grid-cols-1 overflow-hidden md:grid-cols-5">
               <div className="relative col-span-2 flex min-h-[240px] items-end bg-ink-900 p-8 text-paper">
                 {home.progressImageUrl ? (
                   <>

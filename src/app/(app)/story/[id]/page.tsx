@@ -49,7 +49,7 @@ export default async function StoryDetailPage({
         </div>
 
         {story.whatWeSee && (
-          <Card className="h-fit bg-ink-900 p-6 text-paper lg:sticky lg:top-24">
+          <Card sheen={false} className="h-fit bg-ink-900 p-6 text-paper lg:sticky lg:top-24">
             <Eyebrow>
               <span className="text-bronze-400">What We See</span>
             </Eyebrow>
