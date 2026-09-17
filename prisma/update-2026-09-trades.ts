@@ -95,7 +95,7 @@ async function main() {
     include: { subcategories: true },
   });
   if (plumbing) {
-    const wanted = ["Sewer Line", "Water Line"];
+    const wanted = ["Sewer Line", "Main Water Line"];
     const have = new Set(plumbing.subcategories.map((s) => s.name));
     let order = plumbing.subcategories.reduce((max, s) => Math.max(max, s.order), -1) + 1;
     for (const name of wanted) {

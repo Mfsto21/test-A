@@ -94,7 +94,7 @@ async function main() {
           { name: "DWV", order: 2, progress: 35 },
           { name: "Top-Out", order: 3, progress: 10 },
           { name: "Sewer Line", order: 4, progress: 0 },
-          { name: "Water Line", order: 5, progress: 0 },
+          { name: "Main Water Line", order: 5, progress: 0 },
         ],
       },
     },
