@@ -7,6 +7,7 @@ import { Ticker } from "@/components/ticker";
 import { ProgressBar, CompleteBadge } from "@/components/progress-bar";
 import { Card, Eyebrow, Pill, PageShell, SectionIntro, Stat } from "@/components/ui";
 import { Reveal, RevealStagger, RevealItem } from "@/components/reveal";
+import { PoolUpdateEditor } from "@/components/pool-update-editor";
 import { UploadField } from "@/components/upload-field";
 import { updateHomePhotos, updateBuilderLogo } from "@/lib/actions/branding";
 
@@ -300,8 +301,11 @@ export default async function ResidencePage() {
                 <h3 className="mt-2 font-serif text-2xl text-ink-900">The Pool</h3>
                 <p className="mt-2 max-w-lg text-[14px] leading-relaxed text-ink-700/80">
                   {poolDecision.description ??
-                    "The pool and pool bath are currently waiting on permit. As soon as we have movement, you'll see it here first."}
+                    "The pool permit has finally moved to Bureau Veritas for review. As soon as we have further movement, you'll see it here first."}
                 </p>
+                {canEdit && (
+                  <PoolUpdateEditor decisionId={poolDecision.id} description={poolDecision.description} />
+                )}
               </div>
               <Pill tone="bronze">{poolDecision.status === "pending" ? "Waiting on Permit" : poolDecision.status}</Pill>
             </Card>

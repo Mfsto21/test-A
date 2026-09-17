@@ -378,7 +378,7 @@ async function main() {
       title: "The Pool",
       category: "Pool",
       description:
-        "The pool and pool bath are waiting on permit. No new update at the moment — as soon as there's movement, you'll see it here first.",
+        "The pool permit has finally moved to Bureau Veritas for review — the clearest path yet toward getting this piece closed out. As soon as there's further movement, you'll see it here first.",
       important: true,
       order: 3,
     },

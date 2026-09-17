@@ -75,3 +75,18 @@ export async function setDecisionFile(decisionId: string, formData: FormData) {
 
   revalidatePath("/design-studio");
 }
+
+export async function updateDecisionDescription(decisionId: string, formData: FormData) {
+  const session = await requireSession();
+  if (session.role !== "BUILDER") throw new Error("Only the MJF team can do that.");
+
+  const description = String(formData.get("description") ?? "").trim();
+
+  await prisma.decision.update({
+    where: { id: decisionId },
+    data: { description: description || null },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/design-studio");
+}
