@@ -30,6 +30,12 @@ export const metadata: Metadata = {
   title: "Future Home Platform | MJF Construction & Development",
   description:
     "A private digital residence experience by MJF Construction & Development.",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: { index: false, follow: false },
+  },
 };
 
 export default function RootLayout({
