@@ -195,8 +195,8 @@ export default async function ResidencePage() {
               </Link>
             </div>
 
-            <Card interactive sheen={false} className="mt-8 grid grid-cols-1 overflow-hidden md:grid-cols-5">
-              <div className="relative col-span-2 flex min-h-[240px] items-end bg-ink-900 p-8 text-paper">
+            <Card interactive sheen={false} className="mt-8 flex flex-col overflow-hidden md:flex-row">
+              <div className="relative flex min-h-[240px] items-end bg-ink-900 p-8 text-paper md:w-2/5 md:shrink-0">
                 {home.progressImageUrl ? (
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -219,7 +219,7 @@ export default async function ResidencePage() {
                   </h3>
                 </div>
               </div>
-              <div className="col-span-3 p-8">
+              <div className="p-8 md:w-3/5 md:shrink-0">
                 <p className="text-[15px] leading-relaxed text-ink-700/85">
                   {latestStory.narrative.slice(0, 320)}
                   {latestStory.narrative.length > 320 ? "…" : ""}
