@@ -41,7 +41,7 @@ export default async function ResidencePage() {
           <img
             src={home.heroImageUrl}
             alt={home.name}
-            className="pointer-events-none absolute inset-0 h-full w-full origin-center object-cover motion-safe:animate-kenburns"
+            className="pointer-events-none absolute -inset-1 origin-center object-cover motion-safe:animate-kenburns"
           />
         ) : (
           <>
@@ -196,14 +196,14 @@ export default async function ResidencePage() {
             </div>
 
             <Card interactive sheen={false} className="mt-8 flex flex-col overflow-hidden md:flex-row">
-              <div className="relative flex min-h-[240px] items-end bg-ink-900 p-8 text-paper md:w-2/5 md:shrink-0">
+              <div className="relative flex min-h-[240px] items-end overflow-hidden bg-ink-900 p-8 text-paper md:w-2/5 md:shrink-0">
                 {home.progressImageUrl ? (
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={home.progressImageUrl}
                       alt="Current progress"
-                      className="pointer-events-none absolute inset-0 h-full w-full origin-center object-cover motion-safe:animate-kenburns"
+                      className="pointer-events-none absolute -inset-1 origin-center object-cover motion-safe:animate-kenburns"
                     />
                     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(21,19,15,0.88)_0%,rgba(21,19,15,0.35)_28%,rgba(21,19,15,0)_55%)]" />
                   </>
