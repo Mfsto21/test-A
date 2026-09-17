@@ -66,7 +66,7 @@ export default async function ResidencePage() {
         />
 
         <div className="relative mx-auto w-full max-w-6xl px-6 pb-14 pt-40">
-          <p className="motion-safe:animate-fade-up text-[11px] uppercase tracking-widest2 text-paper/50">
+          <p className="motion-safe:animate-fade-up text-[11px] uppercase tracking-widest2 text-paper/75">
             MJF Construction &amp; Development · Northern &amp; Southern California · Lic #1069037
           </p>
           <p
@@ -211,7 +211,9 @@ export default async function ResidencePage() {
                   <HouseIllustration className="pointer-events-none absolute inset-0 h-full w-full text-paper/40" />
                 )}
                 <div className="relative">
-                  <Pill tone="bronze">{latestStory.weekLabel}</Pill>
+                  <span className="inline-flex items-center rounded-full bg-paper/10 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide text-bronze-400 ring-1 ring-inset ring-paper/10">
+                    {latestStory.weekLabel}
+                  </span>
                   <h3 className="mt-3 font-serif text-2xl leading-snug">
                     {latestStory.title}
                   </h3>
