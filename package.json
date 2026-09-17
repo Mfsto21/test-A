@@ -11,6 +11,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts",
     "db:update-2026-09": "tsx prisma/update-2026-09.ts",
+    "db:update-2026-09-trades": "tsx prisma/update-2026-09-trades.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {

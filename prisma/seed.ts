@@ -93,6 +93,8 @@ async function main() {
           { name: "Rough-In Valves", order: 1, progress: 45 },
           { name: "DWV", order: 2, progress: 35 },
           { name: "Top-Out", order: 3, progress: 10 },
+          { name: "Sewer Line", order: 4, progress: 0 },
+          { name: "Water Line", order: 5, progress: 0 },
         ],
       },
     },
@@ -149,6 +151,13 @@ async function main() {
       progress: 0,
       summary: "The exterior envelope starts with a waterproofing membrane, followed by lath.",
       milestoneNote: "Waterproofing membrane, then lath",
+      subcategories: {
+        create: [
+          { name: "Lath", order: 0, progress: 0 },
+          { name: "Scratch", order: 1, progress: 0 },
+          { name: "Brown/Acrylic", order: 2, progress: 0 },
+        ],
+      },
     },
   });
 
@@ -177,11 +186,17 @@ async function main() {
   await prisma.trade.create({
     data: {
       homeId: home.id,
-      name: "Fascia",
+      name: "Painting",
       order: 10,
       progress: 0,
-      summary: "Fascia painting is coming up next.",
-      milestoneNote: "Painting coming",
+      subcategories: {
+        create: [
+          { name: "Fascia", order: 0, progress: 0 },
+          { name: "Prime", order: 1, progress: 0 },
+          { name: "Interior", order: 2, progress: 0 },
+          { name: "Exterior", order: 3, progress: 0 },
+        ],
+      },
     },
   });
 
@@ -228,6 +243,20 @@ async function main() {
         "Adding double tray ceilings in 3 locations, laundry room configuration, coat closet, dining room header height, and the pool room window.",
     },
   });
+
+  // Newly added trades below are created blank (no summary/milestone) — the
+  // builder fills those in from the live site once each is up and running.
+  const blankTrades = ["AV", "Garage Doors", "Waterproofing", "Cabinets", "Shower Glass", "Glass Railing", "Solar"];
+  for (let i = 0; i < blankTrades.length; i++) {
+    await prisma.trade.create({
+      data: {
+        homeId: home.id,
+        name: blankTrades[i],
+        order: 15 + i,
+        progress: 0,
+      },
+    });
+  }
 
   // ---- Phases / Timeline -------------------------------------------------
   // `date` is the real date supplied for that phase — actualDate for a
