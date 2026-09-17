@@ -205,7 +205,7 @@ export default async function ResidencePage() {
                       alt="Current progress"
                       className="pointer-events-none absolute inset-0 h-full w-full origin-center object-cover motion-safe:animate-kenburns"
                     />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink-900/90 via-ink-900/20 to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(21,19,15,0.88)_0%,rgba(21,19,15,0.35)_28%,rgba(21,19,15,0)_55%)]" />
                   </>
                 ) : (
                   <HouseIllustration className="pointer-events-none absolute inset-0 h-full w-full text-paper/40" />
