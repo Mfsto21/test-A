@@ -55,6 +55,17 @@ export default async function ProgressPage() {
                 className="mt-1 w-56 rounded-md border hairline bg-paper px-2 py-1.5 text-sm outline-none focus:border-bronze-400"
               />
             </div>
+            <div>
+              <label className="block text-[11px] uppercase tracking-wide text-ink-700/60">
+                Target Completion Date
+              </label>
+              <input
+                type="date"
+                name="targetCompletionDate"
+                defaultValue={home.targetCompletionDate?.toISOString().slice(0, 10) ?? ""}
+                className="mt-1 rounded-md border hairline bg-paper px-2 py-1.5 text-sm outline-none focus:border-bronze-400"
+              />
+            </div>
             <button
               type="submit"
               className="rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition hover:bg-bronze-600"

@@ -28,7 +28,7 @@ async function main() {
       ownerLabel: "Rainer & Maria Teresa Braun",
       overallProgress: 35,
       currentPhase: "MEP Rough-In",
-      targetCompletionDate: new Date("2027-01-01T00:00:00Z"),
+      targetCompletionDate: new Date("2027-01-15T00:00:00Z"),
       builderId: builder.id,
       heroImageUrl: "/brand/hero-photo.jpg", // the actual Kendell Hill rendering
       progressImageUrl: "/brand/progress-photo.jpg",

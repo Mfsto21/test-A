@@ -59,12 +59,14 @@ export async function updateHomeStatus(homeId: string, formData: FormData) {
 
   const overallProgress = clampProgress(formData.get("overallProgress"));
   const currentPhase = String(formData.get("currentPhase") ?? "").trim();
+  const targetCompletionDateRaw = String(formData.get("targetCompletionDate") ?? "").trim();
 
   await prisma.home.update({
     where: { id: homeId },
     data: {
       overallProgress,
       currentPhase: currentPhase || undefined,
+      targetCompletionDate: targetCompletionDateRaw ? new Date(`${targetCompletionDateRaw}T00:00:00Z`) : null,
     },
   });
 

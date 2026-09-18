@@ -15,6 +15,7 @@
     "db:update-2026-09-pool": "tsx prisma/update-2026-09-pool.ts",
     "db:update-2026-09-remove-greenvine": "tsx prisma/update-2026-09-remove-greenvine.ts",
     "db:update-2026-09-merge-canepa-file": "tsx prisma/update-2026-09-merge-canepa-file.ts",
+    "db:update-2026-09-target-date": "tsx prisma/update-2026-09-target-date.ts",
     "db:update-2026-09-retaining-wall": "tsx prisma/update-2026-09-retaining-wall.ts",
     "postinstall": "prisma generate"
   },
