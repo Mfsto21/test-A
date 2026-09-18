@@ -10,6 +10,7 @@ import {
   setDecisionStatus,
   addDecisionOption,
   setDecisionFile,
+  setDecisionOptionFile,
 } from "@/lib/actions/decisions";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -46,6 +47,7 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
   const [pending, startTransition] = useTransition();
   const [addingOption, setAddingOption] = useState(false);
   const [attachingFile, setAttachingFile] = useState(false);
+  const [attachingOptionId, setAttachingOptionId] = useState<string | null>(null);
   const addOption = addDecisionOption.bind(null, decision.id);
   const attachFile = setDecisionFile.bind(null, decision.id);
   const reduce = useReducedMotion();
@@ -153,6 +155,53 @@ export function DecisionCard({ decision, canEdit }: { decision: DecisionLike; ca
                   >
                     View Proposal Document →
                   </a>
+                )}
+
+                {canEdit && (
+                  <div className="mt-3">
+                    <button
+                      onClick={() =>
+                        setAttachingOptionId((v) => (v === opt.id ? null : opt.id))
+                      }
+                      className="text-[11px] uppercase tracking-wide text-bronze-600 hover:text-bronze-700"
+                    >
+                      {attachingOptionId === opt.id
+                        ? "Close"
+                        : opt.fileUrl
+                        ? "Replace Document"
+                        : "+ Attach Document"}
+                    </button>
+                    <AnimatePresence initial={false}>
+                      {attachingOptionId === opt.id && (
+                        <motion.div
+                          key="attach-option-file"
+                          initial={reduce ? false : { height: 0, opacity: 0 }}
+                          animate={reduce ? {} : { height: "auto", opacity: 1 }}
+                          exit={reduce ? {} : { height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: EASE }}
+                          className="overflow-hidden"
+                        >
+                          <form
+                            action={setDecisionOptionFile.bind(null, opt.id)}
+                            className="mt-2 flex flex-wrap items-center gap-2"
+                          >
+                            <UploadField
+                              name="fileUrl"
+                              defaultValue={opt.fileUrl ?? ""}
+                              accept="image/*,.pdf"
+                              placeholder="Paste a URL, or upload this proposal's PDF"
+                            />
+                            <button
+                              type="submit"
+                              className={`rounded-lg bg-ink-900 px-4 py-2 text-[11px] font-medium uppercase tracking-wide text-paper transition-all duration-200 ease-refined hover:bg-bronze-600 ${BUTTON_MOTION}`}
+                            >
+                              Save
+                            </button>
+                          </form>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 )}
 
                 {!chosen && (
