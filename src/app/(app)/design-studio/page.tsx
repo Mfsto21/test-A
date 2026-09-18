@@ -17,9 +17,10 @@ export default async function DesignStudioPage() {
     include: { options: true },
   });
 
-  const pendingCount = decisions.filter(
-    (d) => d.status === "pending" || d.status === "changes_requested"
-  ).length;
+  const awaiting = decisions.filter((d) => d.status === "pending" || d.status === "changes_requested");
+  const finalized = decisions.filter((d) => d.status === "approved" || d.status === "declined");
+  const pendingCount = awaiting.length;
+  const canEdit = session.role === "BUILDER";
 
   return (
     <PageShell>
@@ -44,16 +45,32 @@ export default async function DesignStudioPage() {
         </div>
       </Card>
 
-      <RevealStagger className="mt-8 space-y-6">
-        {decisions.map((decision) => (
-          <RevealItem key={decision.id}>
-            <DecisionCard decision={decision} canEdit={session.role === "BUILDER"} />
-          </RevealItem>
-        ))}
-        {decisions.length === 0 && (
-          <p className="text-sm text-ink-700/60">No design items yet.</p>
-        )}
-      </RevealStagger>
+      {awaiting.length > 0 && (
+        <RevealStagger className="mt-8 space-y-6">
+          {awaiting.map((decision) => (
+            <RevealItem key={decision.id}>
+              <DecisionCard decision={decision} canEdit={canEdit} />
+            </RevealItem>
+          ))}
+        </RevealStagger>
+      )}
+
+      {decisions.length === 0 && (
+        <p className="mt-8 text-sm text-ink-700/60">No design items yet.</p>
+      )}
+
+      {finalized.length > 0 && (
+        <div className="mt-14">
+          <Eyebrow>Finalized</Eyebrow>
+          <RevealStagger className="mt-4 space-y-6">
+            {finalized.map((decision) => (
+              <RevealItem key={decision.id}>
+                <DecisionCard decision={decision} canEdit={canEdit} />
+              </RevealItem>
+            ))}
+          </RevealStagger>
+        </div>
+      )}
     </PageShell>
   );
 }

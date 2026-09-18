@@ -325,31 +325,25 @@ async function main() {
       homeId: home.id,
       title: "Rock Retaining Wall",
       category: "Landscape",
-      description:
-        "Two contractor proposals for the dry-stack rock retaining wall. Compare scope and pricing below, then choose the one you'd like MJF to move forward with.",
+      description: "Signed with Canepa Landscaping for the dry-stack rock retaining wall.",
       order: 1,
     },
   });
 
-  await prisma.decisionOption.createMany({
-    data: [
-      {
-        decisionId: retainingWall.id,
-        vendorName: "Canepa Landscaping",
-        amount: 25565,
-        scope: "Approximately 75 linear feet of dry-stack rock wall, up to 5 ft at the lowest grade.",
-        inclusions: "Uses site rock; includes backfill and leveling.",
-      },
-      {
-        decisionId: retainingWall.id,
-        vendorName: "Green Vine Landscaping",
-        amount: 15434.29,
-        scope:
-          "Proposal #9720 — approximately 40 linear feet of dry-stack stone retaining wall using existing onsite stone and fill dirt.",
-        inclusions: "Excavation/backfill ($6,533.26) + wall installation ($8,901.03).",
-        notes: "Optional drainage add-on available at $4,587.15.",
-      },
-    ],
+  const canepaOption = await prisma.decisionOption.create({
+    data: {
+      decisionId: retainingWall.id,
+      vendorName: "Canepa Landscaping",
+      amount: 25565,
+      scope: "Approximately 75 linear feet of dry-stack rock wall, up to 5 ft at the lowest grade.",
+      inclusions: "Uses site rock; includes backfill and leveling.",
+      recommended: true,
+    },
+  });
+
+  await prisma.decision.update({
+    where: { id: retainingWall.id },
+    data: { status: "approved", selectedOptionId: canepaOption.id },
   });
 
   await prisma.decision.create({

@@ -13,6 +13,7 @@
     "db:update-2026-09": "tsx prisma/update-2026-09.ts",
     "db:update-2026-09-trades": "tsx prisma/update-2026-09-trades.ts",
     "db:update-2026-09-pool": "tsx prisma/update-2026-09-pool.ts",
+    "db:update-2026-09-retaining-wall": "tsx prisma/update-2026-09-retaining-wall.ts",
     "postinstall": "prisma generate"
   },
   "dependencies": {
