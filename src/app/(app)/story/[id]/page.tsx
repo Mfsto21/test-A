@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { addStoryMedia } from "@/lib/actions/story";
 import { Card, Eyebrow, PageShell, Pill } from "@/components/ui";
 import { MediaTile } from "@/components/media-tile";
+import { StoryMediaManager } from "@/components/story-media-manager";
 import { UploadField } from "@/components/upload-field";
 import { StoryEditor } from "@/components/story-editor";
 import { formatDate } from "@/lib/format";
@@ -67,10 +68,16 @@ export default async function StoryDetailPage({
       {story.media.length > 0 && (
         <div className="mt-14">
           <Eyebrow>Media From This Week</Eyebrow>
-          <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {story.media.map((m) => (
-              <MediaTile key={m.id} media={m} />
-            ))}
+          <div className="mt-4">
+            {session.role === "BUILDER" ? (
+              <StoryMediaManager media={story.media} storyUpdateId={story.id} />
+            ) : (
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                {story.media.map((m) => (
+                  <MediaTile key={m.id} media={m} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

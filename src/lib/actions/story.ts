@@ -78,3 +78,27 @@ export async function addStoryMedia(storyUpdateId: string, homeId: string, formD
 
   revalidatePath(`/story/${storyUpdateId}`);
 }
+
+export async function deleteStoryMedia(storyUpdateId: string, mediaId: string) {
+  await requireBuilder();
+
+  await prisma.media.delete({ where: { id: mediaId } });
+
+  revalidatePath(`/story/${storyUpdateId}`);
+  revalidatePath("/story");
+}
+
+export async function replaceStoryMedia(storyUpdateId: string, mediaId: string, formData: FormData) {
+  await requireBuilder();
+
+  const url = String(formData.get("url") ?? "").trim();
+  if (!url) return;
+
+  await prisma.media.update({
+    where: { id: mediaId },
+    data: { url },
+  });
+
+  revalidatePath(`/story/${storyUpdateId}`);
+  revalidatePath("/story");
+}
